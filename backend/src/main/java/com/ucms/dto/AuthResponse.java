@@ -62,4 +62,12 @@ public class AuthResponse {
     public void setCitizen(CitizenDto citizen) {
         this.citizen = citizen;
     }
+
+    public CitizenDto getUser() {
+        return citizen;
+    }
+
+    public void setUser(CitizenDto user) {
+        this.citizen = user;
+    }
 }

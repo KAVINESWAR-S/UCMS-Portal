@@ -103,4 +103,18 @@ public class Scheme {
 
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+
+    public void setSchemeName(String schemeName) { this.name = schemeName; }
+    public String getSchemeName() { return name; }
+
+    public void setDepartment(String department) {}
+    public void setEligibilityCriteria(String criteria) {}
+    public void setBenefitDetails(String details) {}
+    public void setCategory(String category) {}
+
+    public void setMaxIncomeLimit(BigDecimal limit) { this.incomeLimit = limit; }
+    public void setMaxLandArea(BigDecimal area) { this.landLimit = area; }
+
+    public void setIsActive(Boolean active) { this.active = active; }
+    public Boolean getIsActive() { return active; }
 }

@@ -67,23 +67,45 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
+    public AuthResponse officerLogin(CitizenLoginRequest request) {
+        String normalizedEmail = request.getEmail().trim().toLowerCase();
+
+        Citizen officer = citizenRepository.findByEmail(normalizedEmail)
+                .orElseThrow(() -> new InvalidCredentialsException("Invalid officer credentials"));
+
+        if (officer.getRole() != Role.OFFICER) {
+            throw new InvalidCredentialsException("Access denied: Account is not authorized as a Panchayat Officer");
+        }
+
+        if (!passwordEncoder.matches(request.getPassword(), officer.getPassword())) {
+            throw new InvalidCredentialsException("Invalid officer credentials");
+        }
+
+        String token = jwtService.generateToken(officer);
+        CitizenDto officerDto = CitizenDto.forLogin(officer);
+
+        AuthResponse resp = new AuthResponse(
+                true,
+                "Officer login successful",
+                token,
+                officerDto
+        );
+        resp.setUser(officerDto);
+        return resp;
+    }
+
+    @Transactional(readOnly = true)
     public AuthResponse loginCitizen(CitizenLoginRequest request) {
         String normalizedEmail = request.getEmail().trim().toLowerCase();
 
         Citizen citizen = citizenRepository.findByEmail(normalizedEmail)
                 .orElseThrow(() -> new InvalidCredentialsException("Invalid email or password"));
 
-        if (!passwordEncoder.matches(request.getPassword(), citizen.getPassword())) {
-            throw new InvalidCredentialsException("Invalid email or password");
+        if (citizen.getRole() == Role.OFFICER) {
+            return officerLogin(request);
         }
 
-        String token = jwtService.generateToken(citizen);
-
-        return new AuthResponse(
-                true,
-                "Login successful",
-                token,
-                CitizenDto.forLogin(citizen)
-        );
+        // Enforce Aadhaar-based authentication for citizens
+        throw new InvalidCredentialsException("Password-based citizen login has been disabled. Please authenticate using your 12-digit Aadhaar Number and OTP.");
     }
 }

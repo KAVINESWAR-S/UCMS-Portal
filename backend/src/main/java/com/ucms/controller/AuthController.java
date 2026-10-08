@@ -18,16 +18,42 @@ public class AuthController {
 
     private final AuthService authService;
     private final CitizenService citizenService;
+    private final com.ucms.service.AadhaarAuthService aadhaarAuthService;
 
-    public AuthController(AuthService authService, CitizenService citizenService) {
+    public AuthController(AuthService authService,
+                          CitizenService citizenService,
+                          com.ucms.service.AadhaarAuthService aadhaarAuthService) {
         this.authService = authService;
         this.citizenService = citizenService;
+        this.aadhaarAuthService = aadhaarAuthService;
+    }
+
+    // Aadhaar Check & Discovery Endpoint
+    @PostMapping(value = {"/aadhaar/check", "/aadhaar/lookup"})
+    public ResponseEntity<com.ucms.dto.AadhaarLookupResponse> checkAadhaar(@RequestBody com.ucms.dto.AadhaarOtpRequest request) {
+        String id = request.getAadhaarNumber() != null ? request.getAadhaarNumber() : request.getIdentifier();
+        com.ucms.dto.AadhaarLookupResponse response = aadhaarAuthService.checkAadhaar(id);
+        return ResponseEntity.ok(response);
+    }
+
+    // Aadhaar / Email OTP Dispatch Endpoint
+    @PostMapping("/aadhaar/send-otp")
+    public ResponseEntity<com.ucms.dto.AadhaarOtpResponse> sendAadhaarOtp(@RequestBody com.ucms.dto.AadhaarOtpRequest request) {
+        com.ucms.dto.AadhaarOtpResponse response = aadhaarAuthService.sendOtp(request);
+        return ResponseEntity.ok(response);
+    }
+
+    // Aadhaar OTP Verification & Instant Login / Auto-Registration Endpoint
+    @PostMapping("/aadhaar/verify-otp")
+    public ResponseEntity<AuthResponse> verifyAadhaarOtp(@RequestBody com.ucms.dto.AadhaarOtpVerifyRequest request) {
+        AuthResponse response = aadhaarAuthService.verifyOtpAndLogin(request);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/citizen/register")
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody CitizenRegisterRequest request) {
-        AuthResponse response = authService.registerCitizen(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        // Enforce Aadhaar flow
+        throw new IllegalArgumentException("Standard password registration is disabled. Please onboarding using UIDAI Aadhaar verification.");
     }
 
     @PostMapping("/citizen/login")
@@ -38,7 +64,7 @@ public class AuthController {
 
     @PostMapping("/officer/login")
     public ResponseEntity<AuthResponse> officerLogin(@Valid @RequestBody CitizenLoginRequest request) {
-        AuthResponse response = authService.loginCitizen(request);
+        AuthResponse response = authService.officerLogin(request);
         return ResponseEntity.ok(response);
     }
 

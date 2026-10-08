@@ -18,6 +18,7 @@ import { ApplyScheme } from './pages/citizen/ApplyScheme';
 import { MyApplications } from './pages/citizen/MyApplications';
 import { ApplicationDetails } from './pages/citizen/ApplicationDetails';
 import { Certificates } from './pages/citizen/Certificates';
+import { ServiceRequests } from './pages/citizen/ServiceRequests';
 import { Grievances } from './pages/citizen/Grievances';
 import { Suggestions } from './pages/citizen/Suggestions';
 
@@ -26,6 +27,7 @@ import { OfficerDashboard } from './pages/officer/OfficerDashboard';
 import { OfficerApplications } from './pages/officer/OfficerApplications';
 import { OfficerApplicationDetails } from './pages/officer/OfficerApplicationDetails';
 import { OfficerCertificates } from './pages/officer/OfficerCertificates';
+import { OfficerServiceRequests } from './pages/officer/OfficerServiceRequests';
 import { OfficerGrievances } from './pages/officer/OfficerGrievances';
 import { OfficerSuggestions } from './pages/officer/OfficerSuggestions';
 import { VillageDashboard } from './pages/officer/VillageDashboard';
@@ -68,6 +70,7 @@ export default function App() {
               <Route path="/citizen/applications" element={<MyApplications />} />
               <Route path="/citizen/applications/:id" element={<ApplicationDetails />} />
               <Route path="/citizen/certificates" element={<Certificates />} />
+              <Route path="/citizen/service-requests" element={<ServiceRequests />} />
               <Route path="/citizen/grievances" element={<Grievances />} />
               <Route path="/citizen/suggestions" element={<Suggestions />} />
             </Route>
@@ -80,6 +83,7 @@ export default function App() {
               <Route path="/officer/applications" element={<OfficerApplications />} />
               <Route path="/officer/applications/:id" element={<OfficerApplicationDetails />} />
               <Route path="/officer/certificates" element={<OfficerCertificates />} />
+              <Route path="/officer/service-requests" element={<OfficerServiceRequests />} />
               <Route path="/officer/grievances" element={<OfficerGrievances />} />
               <Route path="/officer/suggestions" element={<OfficerSuggestions />} />
               <Route path="/officer/village" element={<VillageDashboard />} />

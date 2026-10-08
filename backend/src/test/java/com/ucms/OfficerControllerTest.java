@@ -22,11 +22,24 @@ public class OfficerControllerTest {
     @Autowired
     private JwtService jwtService;
 
+    @Autowired
+    private com.ucms.repository.BudgetRepository budgetRepository;
+
     private String officerToken;
     private String citizenToken;
 
     @BeforeEach
     public void setUp() {
+        if (budgetRepository.count() == 0) {
+            com.ucms.model.Budget b = new com.ucms.model.Budget();
+            b.setFinancialYear("2025-2026");
+            b.setTotalAllocation(new java.math.BigDecimal("5000000.00"));
+            b.setAllocatedAmount(new java.math.BigDecimal("4200000.00"));
+            b.setSpentAmount(new java.math.BigDecimal("2150000.00"));
+            b.setRemainingAmount(new java.math.BigDecimal("2050000.00"));
+            budgetRepository.save(b);
+        }
+
         com.ucms.model.Citizen officer = new com.ucms.model.Citizen();
         officer.setId(100L);
         officer.setEmail("officer@ucms.gov.in");

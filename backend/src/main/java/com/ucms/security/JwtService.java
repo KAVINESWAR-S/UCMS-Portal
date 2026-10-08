@@ -43,8 +43,11 @@ public class JwtService {
     public String generateToken(Citizen citizen) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("citizenId", citizen.getId());
+        claims.put("userId", citizen.getId());
         claims.put("email", citizen.getEmail());
         claims.put("role", citizen.getRole().name());
+        claims.put("panchayatName", citizen.getVillage());
+        claims.put("village", citizen.getVillage());
 
         return createToken(claims, citizen.getEmail());
     }
@@ -71,6 +74,12 @@ public class JwtService {
         return (String) claims.get("role");
     }
 
+    public String extractPanchayatName(String token) {
+        Claims claims = extractAllClaims(token);
+        String p = (String) claims.get("panchayatName");
+        return p != null ? p : (String) claims.get("village");
+    }
+
     public Long extractCitizenId(String token) {
         Claims claims = extractAllClaims(token);
         Object citizenId = claims.get("citizenId");
@@ -78,6 +87,10 @@ public class JwtService {
             return ((Number) citizenId).longValue();
         }
         return null;
+    }
+
+    public Long extractUserId(String token) {
+        return extractCitizenId(token);
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {

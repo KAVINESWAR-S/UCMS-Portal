@@ -10,8 +10,10 @@ export const StatusBadge = ({ status }) => {
     badgeClass = 'badge-success';
   } else if (['REJECTED'].includes(normalized)) {
     badgeClass = 'badge-danger';
-  } else if (['PENDING', 'SUBMITTED', 'UNDER_REVIEW', 'PENDING_OFFICER_REVIEW', 'IN_PROGRESS', 'PLANNED'].includes(normalized)) {
+  } else if (['PENDING', 'SUBMITTED', 'UNDER_REVIEW', 'PENDING_OFFICER_REVIEW', 'IN_PROGRESS', 'PLANNED', 'UNDER_VERIFICATION'].includes(normalized)) {
     badgeClass = 'badge-warning';
+  } else if (['SITE_INSPECTION_SCHEDULED', 'WORK_IN_PROGRESS'].includes(normalized)) {
+    badgeClass = 'badge-info';
   }
 
   const label = normalized.replace(/_/g, ' ');

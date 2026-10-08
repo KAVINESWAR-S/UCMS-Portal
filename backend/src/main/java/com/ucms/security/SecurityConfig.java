@@ -50,7 +50,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/api/auth/**", "/api/health", "/api/schemes/**", "/h2-console/**", "/api/public/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/api/officer/auth/**", "/api/health", "/api/schemes/**", "/h2-console/**", "/api/public/**").permitAll()
                         .requestMatchers("/api/citizen/**").hasAnyRole("CITIZEN", "OFFICER")
                         .requestMatchers("/api/officer/**").hasRole("OFFICER")
                         .anyRequest().authenticated()

@@ -120,4 +120,28 @@ public class OfficerController {
         BudgetDto updated = officerService.updateBudget(dto);
         return ResponseEntity.ok(updated);
     }
+
+    // Citizen Management (OFFICER ONLY - Restricted to Officer's Panchayat)
+    @GetMapping("/citizens")
+    public ResponseEntity<List<CitizenDto>> getCitizens(org.springframework.security.core.Authentication authentication) {
+        String officerEmail = authentication != null ? authentication.getName() : null;
+        List<CitizenDto> list = officerService.getCitizensForOfficer(officerEmail);
+        return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/citizens/{id}")
+    public ResponseEntity<CitizenDto> getCitizenById(@PathVariable Long id, org.springframework.security.core.Authentication authentication) {
+        String officerEmail = authentication != null ? authentication.getName() : null;
+        CitizenDto dto = officerService.getCitizenByIdForOfficer(officerEmail, id);
+        return ResponseEntity.ok(dto);
+    }
+
+    @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
+    public ResponseEntity<java.util.Map<String, Object>> handleAccessDenied(org.springframework.security.access.AccessDeniedException ex) {
+        java.util.Map<String, Object> err = new java.util.HashMap<>();
+        err.put("status", 403);
+        err.put("error", "Forbidden");
+        err.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
+    }
 }

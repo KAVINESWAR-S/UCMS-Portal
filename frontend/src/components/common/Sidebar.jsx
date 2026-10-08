@@ -12,6 +12,7 @@ import {
   Building,
   Hammer,
   PieChart,
+  Zap,
 } from 'lucide-react';
 
 export const Sidebar = () => {
@@ -23,6 +24,7 @@ export const Sidebar = () => {
     { to: '/citizen/schemes', label: 'Welfare Schemes', icon: Award },
     { to: '/citizen/applications', label: 'My Applications', icon: FileText },
     { to: '/citizen/certificates', label: 'Certificates', icon: FileCheck },
+    { to: '/citizen/service-requests', label: 'Service Requests', icon: Zap },
     { to: '/citizen/grievances', label: 'Grievances', icon: MessageSquare },
     { to: '/citizen/suggestions', label: 'Suggestions', icon: Lightbulb },
   ];
@@ -31,6 +33,7 @@ export const Sidebar = () => {
     { to: '/officer/dashboard', label: 'Officer Dashboard', icon: LayoutDashboard },
     { to: '/officer/applications', label: 'Applications & AI Review', icon: FileText },
     { to: '/officer/certificates', label: 'Certificate Requests', icon: FileCheck },
+    { to: '/officer/service-requests', label: 'Service Requests', icon: Zap },
     { to: '/officer/grievances', label: 'Grievances', icon: MessageSquare },
     { to: '/officer/suggestions', label: 'Suggestions', icon: Lightbulb },
     { to: '/officer/village', label: 'Village Statistics', icon: Building },

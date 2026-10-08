@@ -65,4 +65,8 @@ public class Budget {
 
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+
+    public void setTotalRevenue(BigDecimal rev) { this.totalAllocation = rev; }
+    public void setSource(String src) {}
+    public void setStatus(String status) {}
 }

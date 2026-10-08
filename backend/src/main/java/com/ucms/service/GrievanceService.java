@@ -42,6 +42,14 @@ public class GrievanceService {
         g.setCategory(request.getCategory().trim());
         g.setSubject(request.getSubject().trim());
         g.setDescription(request.getDescription().trim());
+        if (request.getLocation() != null && !request.getLocation().trim().isEmpty()) {
+            g.setLocation(request.getLocation().trim());
+        }
+        g.setLatitude(request.getLatitude());
+        g.setLongitude(request.getLongitude());
+        if (request.getImageUrl() != null && !request.getImageUrl().trim().isEmpty()) {
+            g.setImageUrl(request.getImageUrl().trim());
+        }
         g.setStatus(GrievanceStatus.SUBMITTED);
 
         if (request.getApplicationId() != null) {

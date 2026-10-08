@@ -12,4 +12,12 @@ public interface CitizenRepository extends JpaRepository<Citizen, Long> {
     Optional<Citizen> findByEmail(String email);
 
     boolean existsByEmail(String email);
+
+    Optional<Citizen> findByAadhaarNumber(String aadhaarNumber);
+
+    boolean existsByAadhaarNumber(String aadhaarNumber);
+
+    java.util.List<Citizen> findByVillage(String village);
+
+    java.util.List<Citizen> findByVillageIgnoreCase(String village);
 }

@@ -5,8 +5,9 @@ import { applicationService } from '../../services/applicationService';
 import { schemeService } from '../../services/schemeService';
 import { certificateService } from '../../services/certificateService';
 import { grievanceService } from '../../services/grievanceService';
+import { serviceRequestService } from '../../services/serviceRequestService';
 import { StatusBadge } from '../../components/common/StatusBadge';
-import { Award, FileText, FileCheck, MessageSquare, ArrowRight, UserCheck } from 'lucide-react';
+import { Award, FileText, FileCheck, MessageSquare, ArrowRight, UserCheck, MapPin, Zap } from 'lucide-react';
 
 export const CitizenDashboard = () => {
   const { user } = useAuth();
@@ -14,22 +15,25 @@ export const CitizenDashboard = () => {
   const [schemes, setSchemes] = useState([]);
   const [certificates, setCertificates] = useState([]);
   const [grievances, setGrievances] = useState([]);
+  const [serviceRequests, setServiceRequests] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [appsRes, schemesRes, certsRes, grvRes] = await Promise.allSettled([
+        const [appsRes, schemesRes, certsRes, grvRes, srvRes] = await Promise.allSettled([
           applicationService.getMyApplications(),
           schemeService.getRecommendedSchemes(),
           certificateService.getMyRequests(),
           grievanceService.getMyGrievances(),
+          serviceRequestService.getMyRequests(),
         ]);
 
         if (appsRes.status === 'fulfilled') setApplications(appsRes.value);
         if (schemesRes.status === 'fulfilled') setSchemes(schemesRes.value);
         if (certsRes.status === 'fulfilled') setCertificates(certsRes.value);
         if (grvRes.status === 'fulfilled') setGrievances(grvRes.value);
+        if (srvRes.status === 'fulfilled') setServiceRequests(srvRes.value);
       } catch (err) {
         console.error('Error loading dashboard data:', err);
       } finally {
@@ -86,6 +90,14 @@ export const CitizenDashboard = () => {
             <div className="stat-value">{schemes.length}</div>
           </div>
           <Award size={32} style={{ color: 'var(--info-text)' }} />
+        </div>
+
+        <div className="stat-card">
+          <div>
+            <div className="stat-label">Service Requests</div>
+            <div className="stat-value">{serviceRequests.length}</div>
+          </div>
+          <Zap size={32} style={{ color: '#eab308' }} />
         </div>
       </div>
 
@@ -194,6 +206,133 @@ export const CitizenDashboard = () => {
               })}
           </div>
         </div>
+      </div>
+
+      {/* Recent Civic Grievances Section */}
+      <div className="card" style={{ marginTop: '1.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+          <div>
+            <h3 className="card-title" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <MessageSquare size={18} style={{ color: 'var(--primary-600)' }} /> Recent Civic Grievances & Location Reports
+            </h3>
+            <p style={{ fontSize: '0.825rem', color: 'var(--slate-500)', margin: '0.2rem 0 0' }}>
+              Complaints submitted with GPS coordinates and photographic evidence.
+            </p>
+          </div>
+          <Link to="/citizen/grievances" className="btn btn-secondary btn-sm">
+            View All Grievances <ArrowRight size={14} />
+          </Link>
+        </div>
+
+        {grievances.length === 0 ? (
+          <p style={{ color: 'var(--slate-500)', fontStyle: 'italic' }}>No complaints filed yet.</p>
+        ) : (
+          <div className="table-responsive">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Category</th>
+                  <th>Subject</th>
+                  <th>Location</th>
+                  <th>Evidence</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {grievances.slice(0, 3).map((g) => (
+                  <tr key={g.id}>
+                    <td><strong>{g.grievanceId}</strong></td>
+                    <td><span className="badge badge-info">{g.category}</span></td>
+                    <td style={{ fontWeight: 600 }}>{g.subject}</td>
+                    <td>
+                      {g.location ? (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.825rem' }}>
+                          <MapPin size={13} style={{ color: '#ef4444' }} /> {g.location}
+                        </span>
+                      ) : (
+                        <span style={{ color: 'var(--slate-400)', fontSize: '0.8rem' }}>Unspecified</span>
+                      )}
+                    </td>
+                    <td>
+                      {g.imageUrl ? (
+                        <span className="badge badge-success" style={{ fontSize: '0.725rem' }}>📷 Attached</span>
+                      ) : (
+                        <span style={{ color: 'var(--slate-400)', fontSize: '0.75rem' }}>None</span>
+                      )}
+                    </td>
+                    <td><StatusBadge status={g.status} /></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* Recent Utility Service Requests Section (EB, Water, etc.) */}
+      <div className="card" style={{ marginTop: '1.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+          <div>
+            <h3 className="card-title" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <Zap size={18} style={{ color: '#eab308' }} /> Utility Service Requests (EB, Water, Drainage)
+            </h3>
+            <p style={{ fontSize: '0.825rem', color: 'var(--slate-500)', margin: '0.2rem 0 0' }}>
+              New electricity meter connections, drinking water pipelines, and municipal civic utility requests.
+            </p>
+          </div>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <Link to="/citizen/service-requests" className="btn btn-primary btn-sm">
+              Request Connection <ArrowRight size={14} />
+            </Link>
+          </div>
+        </div>
+
+        {serviceRequests.length === 0 ? (
+          <p style={{ color: 'var(--slate-500)', fontStyle: 'italic' }}>
+            No utility service requests created yet. Apply for a new EB or Water connection anytime.
+          </p>
+        ) : (
+          <div className="table-responsive">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Request ID</th>
+                  <th>Service Type</th>
+                  <th>Property Address / Survey No</th>
+                  <th>Applied On</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {serviceRequests.slice(0, 3).map((req) => (
+                  <tr key={req.id}>
+                    <td>
+                      <Link to="/citizen/service-requests" style={{ fontWeight: 700, color: 'var(--primary-700)' }}>
+                        {req.requestId}
+                      </Link>
+                    </td>
+                    <td>
+                      <span className="badge badge-info" style={{ fontWeight: 600 }}>
+                        {req.serviceType?.replace(/_/g, ' ')}
+                      </span>
+                    </td>
+                    <td>
+                      <div style={{ fontSize: '0.85rem' }}>{req.propertyAddress}</div>
+                      {req.surveyNumber && (
+                        <div style={{ fontSize: '0.75rem', color: 'var(--slate-500)' }}>Survey: {req.surveyNumber}</div>
+                      )}
+                    </td>
+                    <td style={{ fontSize: '0.85rem' }}>{req.createdAt?.substring(0, 10) || 'Recently'}</td>
+                    <td>
+                      <StatusBadge status={req.status} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );

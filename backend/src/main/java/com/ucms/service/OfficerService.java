@@ -454,4 +454,40 @@ public class OfficerService {
 
         return response;
     }
+
+    @Transactional(readOnly = true)
+    public List<CitizenDto> getCitizensForOfficer(String officerEmail) {
+        if (officerEmail == null || officerEmail.trim().isEmpty()) {
+            return citizenRepository.findAll().stream()
+                    .filter(c -> c.getRole() == Role.CITIZEN)
+                    .map(CitizenDto::fromEntity)
+                    .collect(Collectors.toList());
+        }
+        Citizen officer = citizenRepository.findByEmail(officerEmail.trim().toLowerCase())
+                .orElseThrow(() -> new IllegalArgumentException("Officer not found: " + officerEmail));
+
+        return citizenRepository.findByVillageIgnoreCase(officer.getVillage())
+                .stream()
+                .filter(c -> c.getRole() == Role.CITIZEN)
+                .map(CitizenDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public CitizenDto getCitizenByIdForOfficer(String officerEmail, Long citizenId) {
+        Citizen citizen = citizenRepository.findById(citizenId)
+                .orElseThrow(() -> new IllegalArgumentException("Citizen not found with id: " + citizenId));
+
+        if (officerEmail != null && !officerEmail.trim().isEmpty()) {
+            Citizen officer = citizenRepository.findByEmail(officerEmail.trim().toLowerCase())
+                    .orElseThrow(() -> new IllegalArgumentException("Officer not found: " + officerEmail));
+
+            if (officer.getVillage() != null && citizen.getVillage() != null
+                    && !officer.getVillage().trim().equalsIgnoreCase(citizen.getVillage().trim())) {
+                throw new org.springframework.security.access.AccessDeniedException(
+                        "Cross-Panchayat access denied. " + officer.getVillage() + " officer cannot access " + citizen.getVillage() + " citizen records");
+            }
+        }
+        return CitizenDto.fromEntity(citizen);
+    }
 }

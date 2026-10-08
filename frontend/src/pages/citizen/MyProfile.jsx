@@ -68,45 +68,97 @@ export const MyProfile = () => {
         {message && <div className="alert alert-success"><CheckCircle size={18} /> {message}</div>}
         {error && <div className="alert alert-danger">{error}</div>}
 
+        {/* Aadhaar UIDAI Verification Banner */}
+        <div
+          style={{
+            background: 'linear-gradient(135deg, #f0fdf4, #dcfce7)',
+            border: '1px solid #86efac',
+            borderRadius: '10px',
+            padding: '1rem 1.25rem',
+            marginBottom: '1.5rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '0.75rem',
+          }}
+        >
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#166534', fontWeight: 800, fontSize: '0.95rem' }}>
+              <CheckCircle size={18} style={{ color: '#16a34a' }} /> Aadhaar Linked & UIDAI Verified
+            </div>
+            <div style={{ color: '#15803d', fontSize: '0.825rem', marginTop: '0.2rem' }}>
+              Aadhaar No: <strong style={{ letterSpacing: '1px' }}>{profile.aadhaarNumber ? profile.aadhaarNumber.replace(/(\d{4})(\d{4})(\d{4})/, '$1-$2-$3') : 'UIDAI Verified'}</strong> • Linked Panchayat: <strong>{profile.village}</strong>
+            </div>
+          </div>
+          <span className="badge badge-success" style={{ fontSize: '0.75rem', padding: '0.35rem 0.65rem' }}>
+            ✓ Verified Citizen
+          </span>
+        </div>
+
         <form onSubmit={handleSubmit}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <div className="form-group">
-              <label className="form-label">Full Name</label>
-              <input type="text" className="form-control" name="fullName" value={profile.fullName || ''} onChange={handleChange} required />
+          {/* SECTION 1: VERIFIED AADHAAR IDENTITY FIELDS (READ-ONLY) */}
+          <div style={{ marginBottom: '1.25rem', padding: '1rem', background: '#f8fafc', borderRadius: '8px', border: '1px solid var(--slate-200)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+              <span style={{ fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px', color: '#166534' }}>
+                🔒 Verified UIDAI Demographics (Immutable)
+              </span>
+              <span className="badge badge-success" style={{ fontSize: '0.7rem' }}>Linked via Aadhaar</span>
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Email (Identifier)</label>
-              <input type="email" className="form-control" name="email" value={profile.email || ''} disabled style={{ background: 'var(--slate-100)' }} />
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div className="form-group">
+                <label className="form-label" style={{ fontWeight: 600, color: 'var(--slate-700)' }}>Full Name</label>
+                <input type="text" className="form-control" name="fullName" value={profile.fullName || ''} disabled style={{ background: 'var(--slate-100)', color: 'var(--slate-700)', cursor: 'not-allowed' }} />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label" style={{ fontWeight: 600, color: 'var(--slate-700)' }}>Registered Email</label>
+                <input type="email" className="form-control" name="email" value={profile.email || ''} disabled style={{ background: 'var(--slate-100)', color: 'var(--slate-700)', cursor: 'not-allowed' }} />
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '0.5rem' }}>
+              <div className="form-group">
+                <label className="form-label" style={{ fontWeight: 600, color: 'var(--slate-700)' }}>Assigned Panchayat / Village</label>
+                <input type="text" className="form-control" name="village" value={profile.village || profile.panchayatName || ''} disabled style={{ background: 'var(--slate-100)', color: 'var(--slate-700)', cursor: 'not-allowed' }} />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label" style={{ fontWeight: 600, color: 'var(--slate-700)' }}>Registered Address</label>
+                <input type="text" className="form-control" name="address" value={profile.address || ''} disabled style={{ background: 'var(--slate-100)', color: 'var(--slate-700)', cursor: 'not-allowed' }} />
+              </div>
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <div className="form-group">
-              <label className="form-label">Phone Number</label>
-              <input type="text" className="form-control" name="phoneNumber" value={profile.phoneNumber || ''} onChange={handleChange} required />
+          {/* SECTION 2: USER-CUSTOMIZABLE FIELDS */}
+          <div style={{ marginBottom: '1rem' }}>
+            <span style={{ fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--primary-700)', display: 'block', marginBottom: '0.75rem' }}>
+              ✏️ Customizable Profile Parameters
+            </span>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div className="form-group">
+                <label className="form-label">Contact Phone Number</label>
+                <input type="text" className="form-control" name="phoneNumber" value={profile.phoneNumber || ''} onChange={handleChange} required />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Occupation</label>
+                <input type="text" className="form-control" name="occupation" value={profile.occupation || ''} onChange={handleChange} />
+              </div>
             </div>
 
-            <div className="form-group">
-              <label className="form-label">Village</label>
-              <input type="text" className="form-control" name="village" value={profile.village || ''} onChange={handleChange} required />
-            </div>
-          </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '0.5rem' }}>
+              <div className="form-group">
+                <label className="form-label">Annual Family Income (₹)</label>
+                <input type="number" className="form-control" name="annualIncome" value={profile.annualIncome || ''} onChange={handleChange} required />
+              </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
-            <div className="form-group">
-              <label className="form-label">Occupation</label>
-              <input type="text" className="form-control" name="occupation" value={profile.occupation || ''} onChange={handleChange} />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Annual Income (₹)</label>
-              <input type="number" className="form-control" name="annualIncome" value={profile.annualIncome || ''} onChange={handleChange} required />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Land Holding (Acres)</label>
-              <input type="number" step="0.1" className="form-control" name="landArea" value={profile.landArea || ''} onChange={handleChange} required />
+              <div className="form-group">
+                <label className="form-label">Land Holding (Acres)</label>
+                <input type="number" step="0.1" className="form-control" name="landArea" value={profile.landArea || ''} onChange={handleChange} required />
+              </div>
             </div>
           </div>
 

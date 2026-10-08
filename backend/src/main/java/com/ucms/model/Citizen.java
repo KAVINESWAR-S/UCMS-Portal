@@ -26,13 +26,16 @@ public class Citizen {
     @Column(name = "full_name", nullable = false)
     private String fullName;
 
+    @Column(name = "aadhaar_number", unique = true)
+    private String aadhaarNumber;
+
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     private String password;
 
     @Column(name = "date_of_birth", nullable = false)
@@ -145,6 +148,14 @@ public class Citizen {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public String getAadhaarNumber() {
+        return aadhaarNumber;
+    }
+
+    public void setAadhaarNumber(String aadhaarNumber) {
+        this.aadhaarNumber = aadhaarNumber;
     }
 
     public String getEmail() {
@@ -289,9 +300,18 @@ public class Citizen {
     public String getHealthCondition() { return healthCondition; }
     public void setHealthCondition(String healthCondition) { this.healthCondition = healthCondition; }
 
+    public Boolean getPreviousBenefitReceived() { return previousBenefitReceived; }
+    public void setPreviousBenefitReceived(Boolean previousBenefitReceived) { this.previousBenefitReceived = previousBenefitReceived; }
+
     public Boolean getSeniorCitizen() { return seniorCitizen; }
     public void setSeniorCitizen(Boolean seniorCitizen) { this.seniorCitizen = seniorCitizen; }
 
-    public Boolean getPreviousBenefitReceived() { return previousBenefitReceived; }
-    public void setPreviousBenefitReceived(Boolean previousBenefitReceived) { this.previousBenefitReceived = previousBenefitReceived; }
+    public String getName() { return fullName; }
+    public void setName(String name) { this.fullName = name; }
+
+    public String getPanchayatName() { return village; }
+    public void setPanchayatName(String panchayatName) { this.village = panchayatName; }
+
+    public Boolean getIsActive() { return true; }
+    public void setIsActive(Boolean isActive) {}
 }

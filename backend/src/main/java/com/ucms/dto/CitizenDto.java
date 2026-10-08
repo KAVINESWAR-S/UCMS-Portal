@@ -13,6 +13,7 @@ public class CitizenDto {
 
     private Long id;
     private String fullName;
+    private String aadhaarNumber;
     private String email;
     private String phoneNumber;
     private LocalDate dateOfBirth;
@@ -32,6 +33,7 @@ public class CitizenDto {
         CitizenDto dto = new CitizenDto();
         dto.setId(citizen.getId());
         dto.setFullName(citizen.getFullName());
+        dto.setAadhaarNumber(citizen.getAadhaarNumber());
         dto.setEmail(citizen.getEmail());
         dto.setPhoneNumber(citizen.getPhoneNumber());
         dto.setDateOfBirth(citizen.getDateOfBirth());
@@ -50,7 +52,9 @@ public class CitizenDto {
         CitizenDto dto = new CitizenDto();
         dto.setId(citizen.getId());
         dto.setFullName(citizen.getFullName());
+        dto.setAadhaarNumber(citizen.getAadhaarNumber());
         dto.setEmail(citizen.getEmail());
+        dto.setVillage(citizen.getVillage());
         dto.setRole(citizen.getRole());
         return dto;
     }
@@ -69,6 +73,14 @@ public class CitizenDto {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public String getAadhaarNumber() {
+        return aadhaarNumber;
+    }
+
+    public void setAadhaarNumber(String aadhaarNumber) {
+        this.aadhaarNumber = aadhaarNumber;
     }
 
     public String getEmail() {
@@ -157,5 +169,21 @@ public class CitizenDto {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public String getName() {
+        return fullName;
+    }
+
+    public void setName(String name) {
+        this.fullName = name;
+    }
+
+    public String getPanchayatName() {
+        return village;
+    }
+
+    public void setPanchayatName(String panchayatName) {
+        this.village = panchayatName;
     }
 }

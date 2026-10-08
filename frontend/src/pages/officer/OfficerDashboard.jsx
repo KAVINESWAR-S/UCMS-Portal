@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { officerService } from '../../services/officerService';
 import { StatusBadge } from '../../components/common/StatusBadge';
-import { Users, FileText, CheckCircle, AlertTriangle, FileCheck, MessageSquare, Hammer, PieChart, ArrowRight } from 'lucide-react';
+import { Users, FileText, CheckCircle, AlertTriangle, FileCheck, MessageSquare, Hammer, PieChart, ArrowRight, Zap } from 'lucide-react';
 
 export const OfficerDashboard = () => {
   const [stats, setStats] = useState(null);
@@ -112,6 +112,34 @@ export const OfficerDashboard = () => {
           </div>
           <Link to="/officer/development-works" className="btn btn-secondary btn-sm" style={{ marginTop: '1rem' }}>
             Infrastructure Works <ArrowRight size={14} />
+          </Link>
+        </div>
+
+        <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div>
+            <h3 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Zap style={{ color: '#eab308' }} /> Utility Service Requests (EB & Water)
+            </h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--slate-600)' }}>
+              Inspect EB electricity and water pipeline connection requests, check GPS coordinates, review ownership proofs, schedule site inspection dates, and assign field linemen.
+            </p>
+          </div>
+          <Link to="/officer/service-requests" className="btn btn-secondary btn-sm" style={{ marginTop: '1rem' }}>
+            Manage Service Requests <ArrowRight size={14} />
+          </Link>
+        </div>
+
+        <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div>
+            <h3 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <MessageSquare style={{ color: 'var(--primary-600)' }} /> Civic Grievances & Geo-Photos
+            </h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--slate-600)' }}>
+              Inspect village complaints with GPS location pins and attached photo evidence to schedule repairs and post resolutions.
+            </p>
+          </div>
+          <Link to="/officer/grievances" className="btn btn-secondary btn-sm" style={{ marginTop: '1rem' }}>
+            Inspect Grievances <ArrowRight size={14} />
           </Link>
         </div>
       </div>

@@ -10,10 +10,16 @@ public class GrievanceDto {
     private String grievanceId;
     private Long citizenId;
     private String citizenName;
+    private String citizenEmail;
+    private String citizenPhone;
     private Long applicationId;
     private String category;
     private String subject;
     private String description;
+    private String location;
+    private Double latitude;
+    private Double longitude;
+    private String imageUrl;
     private GrievanceStatus status;
     private String officerResponse;
     private LocalDateTime createdAt;
@@ -28,6 +34,8 @@ public class GrievanceDto {
         if (g.getCitizen() != null) {
             dto.setCitizenId(g.getCitizen().getId());
             dto.setCitizenName(g.getCitizen().getFullName());
+            dto.setCitizenEmail(g.getCitizen().getEmail());
+            dto.setCitizenPhone(g.getCitizen().getPhoneNumber());
         }
         if (g.getApplication() != null) {
             dto.setApplicationId(g.getApplication().getId());
@@ -35,6 +43,10 @@ public class GrievanceDto {
         dto.setCategory(g.getCategory());
         dto.setSubject(g.getSubject());
         dto.setDescription(g.getDescription());
+        dto.setLocation(g.getLocation());
+        dto.setLatitude(g.getLatitude());
+        dto.setLongitude(g.getLongitude());
+        dto.setImageUrl(g.getImageUrl());
         dto.setStatus(g.getStatus());
         dto.setOfficerResponse(g.getOfficerResponse());
         dto.setCreatedAt(g.getCreatedAt());
@@ -54,6 +66,12 @@ public class GrievanceDto {
     public String getCitizenName() { return citizenName; }
     public void setCitizenName(String citizenName) { this.citizenName = citizenName; }
 
+    public String getCitizenEmail() { return citizenEmail; }
+    public void setCitizenEmail(String citizenEmail) { this.citizenEmail = citizenEmail; }
+
+    public String getCitizenPhone() { return citizenPhone; }
+    public void setCitizenPhone(String citizenPhone) { this.citizenPhone = citizenPhone; }
+
     public Long getApplicationId() { return applicationId; }
     public void setApplicationId(Long applicationId) { this.applicationId = applicationId; }
 
@@ -65,6 +83,18 @@ public class GrievanceDto {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
+
+    public Double getLatitude() { return latitude; }
+    public void setLatitude(Double latitude) { this.latitude = latitude; }
+
+    public Double getLongitude() { return longitude; }
+    public void setLongitude(Double longitude) { this.longitude = longitude; }
+
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
     public GrievanceStatus getStatus() { return status; }
     public void setStatus(GrievanceStatus status) { this.status = status; }
