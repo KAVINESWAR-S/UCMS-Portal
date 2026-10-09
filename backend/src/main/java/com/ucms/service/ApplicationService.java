@@ -107,7 +107,12 @@ public class ApplicationService {
             throw new IllegalArgumentException("Unauthorized access to application");
         }
 
-        return ApplicationDto.fromEntity(app);
+        ApplicationDto dto = ApplicationDto.fromEntity(app);
+        List<DocumentDto> docs = documentRepository.findByApplicationId(id).stream()
+                .map(DocumentDto::fromEntity)
+                .collect(Collectors.toList());
+        dto.setDocuments(docs);
+        return dto;
     }
 
     @Transactional
@@ -129,8 +134,9 @@ public class ApplicationService {
 
         DocumentEntity saved = documentRepository.save(doc);
 
-        // Update document count on application
-        app.setDocumentCount(app.getDocumentCount() + 1);
+        // Update document count accurately on application
+        List<DocumentEntity> existingDocs = documentRepository.findByApplicationId(app.getId());
+        app.setDocumentCount(existingDocs.size());
         applicationRepository.save(app);
 
         return DocumentDto.fromEntity(saved);

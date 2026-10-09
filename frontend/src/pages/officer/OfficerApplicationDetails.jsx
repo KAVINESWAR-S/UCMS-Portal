@@ -5,7 +5,7 @@ import { officerService } from '../../services/officerService';
 import { StatusBadge, AiRiskBadge } from '../../components/common/StatusBadge';
 import { ShapVisualizer } from '../../components/common/ShapVisualizer';
 import { ECertificateModal } from '../../components/certificate/ECertificateModal';
-import { ArrowLeft, Cpu, CheckCircle, XCircle, AlertTriangle, Paperclip, MessageSquare, Award } from 'lucide-react';
+import { ArrowLeft, Cpu, CheckCircle, XCircle, AlertTriangle, Paperclip, MessageSquare, Award, FileText, Eye, X } from 'lucide-react';
 
 export const OfficerApplicationDetails = () => {
   const { id } = useParams();
@@ -17,6 +17,7 @@ export const OfficerApplicationDetails = () => {
   const [reviewing, setReviewing] = useState(false);
   const [hasRerunAi, setHasRerunAi] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState(null);
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
@@ -141,6 +142,75 @@ export const OfficerApplicationDetails = () => {
           <div><strong>Application Date:</strong> {app.applicationDate}</div>
           <div><strong>Attached Documents:</strong> {app.documents?.length || app.documentCount || 0}</div>
         </div>
+      </div>
+
+      {/* Attached Verification Documents List for Officer Review */}
+      <div className="card" style={{ marginBottom: '1.5rem' }}>
+        <h3 className="card-title" style={{ fontSize: '1.05rem', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
+          <Paperclip size={18} className="text-primary-600" /> Attached Verification Documents ({app.documents?.length || 0})
+        </h3>
+        {app.documents && app.documents.length > 0 ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+            {app.documents.map((doc) => (
+              <div
+                key={doc.id}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '0.75rem 1rem',
+                  background: 'var(--slate-50)',
+                  border: '1px solid var(--slate-200)',
+                  borderRadius: '8px',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <div
+                    style={{
+                      width: '36px',
+                      height: '36px',
+                      borderRadius: '6px',
+                      background: '#e0f2fe',
+                      color: '#0284c7',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <FileText size={20} />
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--slate-800)' }}>
+                      {doc.documentType}
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--slate-500)' }}>
+                      {doc.fileName} {doc.uploadedAt ? `• Uploaded ${new Date(doc.uploadedAt).toLocaleDateString()}` : ''}
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  {doc.filePath && doc.filePath.startsWith('data:image') && (
+                    <button
+                      type="button"
+                      onClick={() => setPreviewImage(doc.filePath)}
+                      className="btn btn-sm btn-secondary"
+                      style={{ fontSize: '0.75rem', padding: '0.3rem 0.6rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
+                    >
+                      <Eye size={13} /> View Document
+                    </button>
+                  )}
+                  <span className="badge badge-success">Attached</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p style={{ color: 'var(--slate-500)', fontSize: '0.85rem', fontStyle: 'italic', margin: 0 }}>
+            No documents attached with this application.
+          </p>
+        )}
       </div>
 
       {/* Trigger AI Evaluation Section */}
@@ -386,6 +456,67 @@ export const OfficerApplicationDetails = () => {
         data={app}
         type="APPLICATION"
       />
+
+      {/* Lightbox for Document Full View */}
+      {previewImage && (
+        <div
+          onClick={() => setPreviewImage(null)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(15, 23, 42, 0.85)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            padding: '2rem',
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: 'relative',
+              maxWidth: '90vw',
+              maxHeight: '90vh',
+              backgroundColor: '#ffffff',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => setPreviewImage(null)}
+              style={{
+                position: 'absolute',
+                top: '12px',
+                right: '12px',
+                background: 'rgba(0,0,0,0.6)',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '50%',
+                width: '32px',
+                height: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                zIndex: 10,
+              }}
+            >
+              <X size={18} />
+            </button>
+            <img
+              src={previewImage}
+              alt="Verification document full preview"
+              style={{ maxWidth: '85vw', maxHeight: '80vh', objectFit: 'contain', display: 'block' }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

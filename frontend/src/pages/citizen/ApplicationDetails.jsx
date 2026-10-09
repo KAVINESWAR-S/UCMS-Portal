@@ -3,13 +3,14 @@ import { useParams, Link } from 'react-router-dom';
 import { applicationService } from '../../services/applicationService';
 import { StatusBadge } from '../../components/common/StatusBadge';
 import { ECertificateModal } from '../../components/certificate/ECertificateModal';
-import { FileText, ArrowLeft, Paperclip, MessageSquare, Award } from 'lucide-react';
+import { FileText, ArrowLeft, Paperclip, MessageSquare, Award, Eye, X } from 'lucide-react';
 
 export const ApplicationDetails = () => {
   const { id } = useParams();
   const [app, setApp] = useState(null);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState(null);
 
   useEffect(() => {
     const fetchApp = async () => {
@@ -82,11 +83,26 @@ export const ApplicationDetails = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.5rem' }}>
             {app.documents.map((doc) => (
               <div key={doc.id} style={{ background: '#ffffff', border: '1px solid var(--slate-200)', padding: '0.75rem 1rem', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div>
-                  <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>{doc.documentType}</div>
-                  <div style={{ fontSize: '0.775rem', color: 'var(--slate-500)' }}>{doc.fileName}</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <FileText size={20} className="text-primary-600" />
+                  <div>
+                    <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>{doc.documentType}</div>
+                    <div style={{ fontSize: '0.775rem', color: 'var(--slate-500)' }}>{doc.fileName}</div>
+                  </div>
                 </div>
-                <span className="badge badge-success">Attached</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  {doc.filePath && doc.filePath.startsWith('data:image') && (
+                    <button
+                      type="button"
+                      onClick={() => setPreviewImage(doc.filePath)}
+                      className="btn btn-sm btn-secondary"
+                      style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem', display: 'flex', alignItems: 'center', gap: '0.3rem' }}
+                    >
+                      <Eye size={13} /> View
+                    </button>
+                  )}
+                  <span className="badge badge-success">Attached</span>
+                </div>
               </div>
             ))}
           </div>
@@ -113,6 +129,67 @@ export const ApplicationDetails = () => {
         data={app}
         type="APPLICATION"
       />
+
+      {/* Lightbox for Document Preview */}
+      {previewImage && (
+        <div
+          onClick={() => setPreviewImage(null)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(15, 23, 42, 0.85)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            padding: '2rem',
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: 'relative',
+              maxWidth: '90vw',
+              maxHeight: '90vh',
+              backgroundColor: '#ffffff',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => setPreviewImage(null)}
+              style={{
+                position: 'absolute',
+                top: '12px',
+                right: '12px',
+                background: 'rgba(0,0,0,0.6)',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '50%',
+                width: '32px',
+                height: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                zIndex: 10,
+              }}
+            >
+              <X size={18} />
+            </button>
+            <img
+              src={previewImage}
+              alt="Document full preview"
+              style={{ maxWidth: '85vw', maxHeight: '80vh', objectFit: 'contain', display: 'block' }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

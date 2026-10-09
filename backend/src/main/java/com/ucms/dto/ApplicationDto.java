@@ -29,6 +29,7 @@ public class ApplicationDto {
     private String address;
     private AiAnalysisStatus aiAnalysisStatus;
     private LocalDateTime createdAt;
+    private java.util.List<DocumentDto> documents;
 
     public ApplicationDto() {
     }
@@ -122,4 +123,7 @@ public class ApplicationDto {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
+    public java.util.List<DocumentDto> getDocuments() { return documents; }
+    public void setDocuments(java.util.List<DocumentDto> documents) { this.documents = documents; }
 }

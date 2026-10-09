@@ -25,6 +25,7 @@ public class OfficerService {
     private final BudgetRepository budgetRepository;
     private final AiAnalysisRepository aiAnalysisRepository;
     private final AiService aiService;
+    private final DocumentRepository documentRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public OfficerService(CitizenRepository citizenRepository,
@@ -35,7 +36,8 @@ public class OfficerService {
                           DevelopmentWorkRepository developmentWorkRepository,
                           BudgetRepository budgetRepository,
                           AiAnalysisRepository aiAnalysisRepository,
-                          AiService aiService) {
+                          AiService aiService,
+                          DocumentRepository documentRepository) {
         this.citizenRepository = citizenRepository;
         this.applicationRepository = applicationRepository;
         this.certificateRequestRepository = certificateRequestRepository;
@@ -45,6 +47,7 @@ public class OfficerService {
         this.budgetRepository = budgetRepository;
         this.aiAnalysisRepository = aiAnalysisRepository;
         this.aiService = aiService;
+        this.documentRepository = documentRepository;
     }
 
     @Transactional(readOnly = true)
@@ -81,7 +84,14 @@ public class OfficerService {
     public List<ApplicationDto> getAllApplications() {
         return applicationRepository.findAllByOrderByCreatedAtDesc()
                 .stream()
-                .map(ApplicationDto::fromEntity)
+                .map(app -> {
+                    ApplicationDto dto = ApplicationDto.fromEntity(app);
+                    List<DocumentDto> docs = documentRepository.findByApplicationId(app.getId()).stream()
+                            .map(DocumentDto::fromEntity)
+                            .collect(Collectors.toList());
+                    dto.setDocuments(docs);
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 
