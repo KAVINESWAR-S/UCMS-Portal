@@ -22,7 +22,8 @@ class ExplainableAILayer:
     fraud risk assessments, and local SHAP feature attributions for ML predictions.
     """
     def __init__(self):
-        pass
+        self._explainer = None
+        self._explainer_model = None
 
     def explain_recommendation(self, recommendation_result, citizen_profile):
         """
@@ -198,8 +199,11 @@ class ExplainableAILayer:
                     "shap_available": True
                 }
 
-            # 2. TreeExplainer Initialization & Execution
-            explainer = shap.TreeExplainer(model)
+            # 2. TreeExplainer Initialization & Execution (cached for performance)
+            if self._explainer is None or self._explainer_model is not model:
+                self._explainer = shap.TreeExplainer(model)
+                self._explainer_model = model
+            explainer = self._explainer
 
             # Determine Base Value float
             base_val = 0.5

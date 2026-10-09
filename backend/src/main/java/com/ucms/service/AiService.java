@@ -18,8 +18,8 @@ public class AiService {
 
     public AiService() {
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-        factory.setConnectTimeout(3000);
-        factory.setReadTimeout(5000);
+        factory.setConnectTimeout(10000);
+        factory.setReadTimeout(30000);
         this.restTemplate = new RestTemplate(factory);
     }
 

@@ -54,7 +54,7 @@ class FraudIntelligenceEngine:
             self.applications_df = pd.DataFrame()
 
         # Load pre-trained model
-        model_paths = [
+        self.model_paths = [
             os.path.join(models_dir, "fraud_model.joblib"),
             os.path.join(models_dir, "fraud", "fraud_model.joblib"),
             "models/fraud_model.joblib",
@@ -71,15 +71,25 @@ class FraudIntelligenceEngine:
             "land_diff"
         ]
 
-        for mp in model_paths:
+        self.ensure_model_loaded()
+
+    def ensure_model_loaded(self):
+        """
+        Attempts to load model artifact if not yet loaded.
+        """
+        if self.model is not None:
+            return True
+
+        for mp in self.model_paths:
             if os.path.exists(mp):
                 try:
                     artifact = joblib.load(mp)
                     self.model = artifact["model"]
                     self.feature_names = artifact["feature_names"]
-                    break
+                    return True
                 except Exception as e:
                     print(f"Warning: Could not load fraud ML model artifact from '{mp}': {e}")
+        return False
 
     def prepare_single_app_features(self, application, citizen_profile):
         """
@@ -233,6 +243,9 @@ class FraudIntelligenceEngine:
             c_profile = citizen_profile.to_dict()
         else:
             c_profile = citizen_profile
+
+        # Ensure model is loaded if not already
+        self.ensure_model_loaded()
 
         # Prepare features
         X_df = self.prepare_single_app_features(app, c_profile)

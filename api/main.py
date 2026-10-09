@@ -41,7 +41,7 @@ def health():
     """
     model_loaded = False
     if service is not None and service.fraud_engine is not None:
-         model_loaded = service.fraud_engine.model is not None
+         model_loaded = service.fraud_engine.ensure_model_loaded()
          
     return {
         "status": "UP",
