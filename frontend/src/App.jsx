@@ -5,8 +5,8 @@ import { MainLayout, AuthLayout } from './layouts/MainLayout';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 
 // Auth Pages
-import { CitizenLogin, OfficerLogin } from './pages/auth/CitizenLogin';
-import { CitizenRegister } from './pages/auth/CitizenRegister';
+import { AadhaarLogin } from './pages/auth/AadhaarLogin';
+import { OfficerLogin } from './pages/auth/OfficerLogin';
 import { VerifyCertificate } from './pages/public/VerifyCertificate';
 
 // Citizen Pages
@@ -54,8 +54,8 @@ export default function App() {
           <Route path="/verify" element={<VerifyCertificate />} />
           <Route path="/verify-certificate" element={<VerifyCertificate />} />
           <Route element={<AuthLayout />}>
-            <Route path="/login" element={<CitizenLogin />} />
-            <Route path="/register" element={<CitizenRegister />} />
+            <Route path="/login" element={<AadhaarLogin />} />
+            <Route path="/register" element={<Navigate to="/login" replace />} />
             <Route path="/officer/login" element={<OfficerLogin />} />
           </Route>
 

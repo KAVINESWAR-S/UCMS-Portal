@@ -332,7 +332,7 @@ export const OfficerApplicationDetails = () => {
         )}
 
         {/* Decision Actions Based on Approval Lifecycle */}
-        {app.status === 'PENDING' && (
+        {(app.status === 'PENDING' || app.status === 'UNDER_REVIEW') && (
           <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
             <button
               className="btn btn-success"

@@ -76,7 +76,7 @@ export const OfficerApplications = () => {
             <select className="form-control" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
               <option value="ALL">All Statuses</option>
               <option value="PENDING">PENDING</option>
-
+              <option value="UNDER_REVIEW">UNDER REVIEW</option>
               <option value="APPROVED">APPROVED</option>
               <option value="REJECTED">REJECTED</option>
             </select>

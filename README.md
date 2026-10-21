@@ -76,7 +76,7 @@ The system is built on a decoupled, three-tier microservice architecture communi
 | :--- | :--- | :--- |
 | **Frontend Portal** | React 19, Vite 6/8, React Router 7, Axios, Lucide Icons, QRCode | Interactive, responsive SPA for citizens, officers, and public verification |
 | **Styling** | Vanilla CSS (Tailored Design System, CSS Variables, Glassmorphism) | High-performance, clean UI without bulky utility library overhead |
-| **Transaction Backend** | Java 21 LTS, Spring Boot 3.3.3, Spring Data JPA, Spring Security | Transactional REST API, business validation, JWT verification, cryptographic hashing |
+| **Transaction Backend** | Java 25 LTS, Spring Boot 3.5.16, Spring Data JPA, Spring Security | Transactional REST API, business validation, JWT verification, cryptographic hashing |
 | **Databases** | H2 Database (File-based local) & PostgreSQL (Cloud / Neon) | Relational persistence, citizen registries, audit logs, schemes, budgets |
 | **AI & ML Engine** | Python 3.10+, FastAPI, Uvicorn, Scikit-Learn, SHAP, Pandas, NumPy | Socio-economic profiling, Random Forest fraud classification, SHAP tree explainability |
 
@@ -209,7 +209,7 @@ The system supports two database profiles:
 ### Prerequisites
 Before running the system, ensure the following are installed on your machine:
 - **Node.js**: Version 18+ (tested on Node 20 / 24)
-- **Java**: JDK 21 LTS installed (`java -version`)
+- **Java**: JDK 25 LTS installed (`java -version`)
 - **Apache Maven**: Version 3.8+ installed (`mvn -version`)
 - **Python**: Version 3.10+ installed (`python --version`)
 
@@ -240,7 +240,7 @@ Before running the system, ensure the following are installed on your machine:
    ```
 5. Launch the FastAPI AI server:
    ```powershell
-   .\venv\Scripts\python.exe -m uvicorn api.main:app --host 127.0.0.1 --port 8000
+   .\venv\Scripts\python.exe .\api\main.py
    ```
    *Verify by opening `http://127.0.0.1:8000/health` in your browser. It should return `{"status":"UP","service":"UCMS AI Service","model_loaded":true}`.*
 

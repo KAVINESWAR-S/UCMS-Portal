@@ -6,8 +6,8 @@ Backend service for the Unified Citizen Management System (UCMS) developed with 
 
 ## 🛠️ Technology Stack
 
-- **Java**: 21 LTS
-- **Framework**: Spring Boot 3.3.3 (Spring Web, Spring Data JPA, Spring Security, Bean Validation)
+- **Java**: 25 LTS
+- **Framework**: Spring Boot 3.5.16 (Spring Web, Spring Data JPA, Spring Security, Bean Validation)
 - **Database**: PostgreSQL Cloud (via JPA / Hibernate)
 - **Authentication**: JWT (JSON Web Tokens) with HMAC-SHA256 & BCrypt Password Hashing
 - **Build Tool**: Maven

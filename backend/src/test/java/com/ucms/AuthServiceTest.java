@@ -123,7 +123,7 @@ class AuthServiceTest {
     }
 
     @Test
-    void testLoginCitizen_Success() {
+    void testLoginCitizen_ThrowsPasswordLoginDisabled() {
         Citizen citizen = new Citizen();
         citizen.setId(1L);
         citizen.setFullName("Kavimalan");
@@ -132,19 +132,12 @@ class AuthServiceTest {
         citizen.setRole(Role.CITIZEN);
 
         when(citizenRepository.findByEmail("kavi@example.com")).thenReturn(Optional.of(citizen));
-        when(jwtService.generateToken(citizen)).thenReturn("mocked.jwt.token");
 
         CitizenLoginRequest loginRequest = new CitizenLoginRequest("kavi@example.com", "Password@123");
-        AuthResponse response = authService.loginCitizen(loginRequest);
-
-        assertNotNull(response);
-        assertTrue(response.isSuccess());
-        assertEquals("Login successful", response.getMessage());
-        assertEquals("mocked.jwt.token", response.getToken());
-        assertNotNull(response.getCitizen());
-        assertEquals(1L, response.getCitizen().getId());
-        assertEquals("kavi@example.com", response.getCitizen().getEmail());
-        assertEquals(Role.CITIZEN, response.getCitizen().getRole());
+        assertThrows(
+                InvalidCredentialsException.class,
+                () -> authService.loginCitizen(loginRequest)
+        );
     }
 
     @Test

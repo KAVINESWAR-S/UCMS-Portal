@@ -67,174 +67,75 @@ class AuthControllerTest {
     }
 
     @Test
-    void testCitizenRegistration_Success() throws Exception {
-        Map<String, Object> payload = createValidRegistrationPayload();
+    void testAadhaarCheck_Success() throws Exception {
+        Map<String, String> payload = new HashMap<>();
+        payload.put("aadhaarNumber", "999900000001");
 
-        mockMvc.perform(post("/api/auth/citizen/register")
+        mockMvc.perform(post("/api/auth/aadhaar/check")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(payload)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.message").value("Citizen registered successfully"))
-                .andExpect(jsonPath("$.citizen.id").isNumber())
-                .andExpect(jsonPath("$.citizen.fullName").value("Kavimalan"))
-                .andExpect(jsonPath("$.citizen.email").value("kavi@example.com"))
-                .andExpect(jsonPath("$.citizen.phoneNumber").value("9876543210"))
-                .andExpect(jsonPath("$.citizen.dateOfBirth").value("2005-06-15"))
-                .andExpect(jsonPath("$.citizen.gender").value("MALE"))
-                .andExpect(jsonPath("$.citizen.address").value("Example Address"))
-                .andExpect(jsonPath("$.citizen.village").value("Melur"))
-                .andExpect(jsonPath("$.citizen.occupation").value("Agriculture"))
-                .andExpect(jsonPath("$.citizen.annualIncome").value(83884.0))
-                .andExpect(jsonPath("$.citizen.landArea").value(1.05))
-                .andExpect(jsonPath("$.citizen.farmerStatus").value(true))
-                .andExpect(jsonPath("$.citizen.role").value("CITIZEN"))
-                .andExpect(jsonPath("$.citizen.password").doesNotExist())
-                .andExpect(jsonPath("$.password").doesNotExist());
-    }
-
-    @Test
-    void testCitizenRegistration_DuplicateEmail_Returns409Conflict() throws Exception {
-        Map<String, Object> payload = createValidRegistrationPayload();
-
-        // Register first time
-        mockMvc.perform(post("/api/auth/citizen/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(payload)))
-                .andExpect(status().isCreated());
-
-        // Register duplicate email
-        mockMvc.perform(post("/api/auth/citizen/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(payload)))
-                .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.message").value("Email already registered"));
-    }
-
-    @Test
-    void testCitizenRegistration_InvalidEmail_Returns400BadRequest() throws Exception {
-        Map<String, Object> payload = createValidRegistrationPayload();
-        payload.put("email", "invalid-email-address");
-
-        mockMvc.perform(post("/api/auth/citizen/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(payload)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.message").value("Validation failed"))
-                .andExpect(jsonPath("$.errors.email").exists());
-    }
-
-    @Test
-    void testCitizenRegistration_WeakPassword_Returns400BadRequest() throws Exception {
-        Map<String, Object> payload = createValidRegistrationPayload();
-        payload.put("password", "short");
-        payload.put("confirmPassword", "short");
-
-        mockMvc.perform(post("/api/auth/citizen/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(payload)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.message").value("Validation failed"))
-                .andExpect(jsonPath("$.errors.password").value("Password must contain at least 8 characters"));
-    }
-
-    @Test
-    void testCitizenRegistration_PasswordMismatch_Returns400BadRequest() throws Exception {
-        Map<String, Object> payload = createValidRegistrationPayload();
-        payload.put("password", "Password@123");
-        payload.put("confirmPassword", "DifferentPassword@123");
-
-        mockMvc.perform(post("/api/auth/citizen/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(payload)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.message").value("Passwords do not match"));
-    }
-
-    @Test
-    void testCitizenRegistration_ClientCannotInjectAdminRole() throws Exception {
-        Map<String, Object> payload = createValidRegistrationPayload();
-        payload.put("role", "ADMIN");
-
-        mockMvc.perform(post("/api/auth/citizen/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(payload)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.citizen.role").value("CITIZEN"));
-
-        Citizen saved = citizenRepository.findByEmail("kavi@example.com").orElseThrow();
-        assertEquals(com.ucms.model.Role.CITIZEN, saved.getRole());
-    }
-
-    @Test
-    void testCitizenLogin_Success() throws Exception {
-        // Register first
-        Map<String, Object> regPayload = createValidRegistrationPayload();
-        mockMvc.perform(post("/api/auth/citizen/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(regPayload)))
-                .andExpect(status().isCreated());
-
-        // Login
-        Map<String, String> loginPayload = new HashMap<>();
-        loginPayload.put("email", "kavi@example.com");
-        loginPayload.put("password", "Password@123");
-
-        mockMvc.perform(post("/api/auth/citizen/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginPayload)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.message").value("Login successful"))
-                .andExpect(jsonPath("$.token").isString())
-                .andExpect(jsonPath("$.token", not(emptyOrNullString())))
-                .andExpect(jsonPath("$.citizen.id").isNumber())
-                .andExpect(jsonPath("$.citizen.fullName").value("Kavimalan"))
-                .andExpect(jsonPath("$.citizen.email").value("kavi@example.com"))
-                .andExpect(jsonPath("$.citizen.role").value("CITIZEN"))
-                .andExpect(jsonPath("$.citizen.password").doesNotExist())
-                .andExpect(jsonPath("$.password").doesNotExist());
+                .andExpect(jsonPath("$.exists").value(true))
+                .andExpect(jsonPath("$.aadhaarNumber").value("999900000001"));
     }
 
     @Test
-    void testCitizenLogin_WrongPassword_Returns401Unauthorized() throws Exception {
-        // Register first
-        Map<String, Object> regPayload = createValidRegistrationPayload();
+    void testAadhaarSendOtp_Success() throws Exception {
+        Map<String, String> payload = new HashMap<>();
+        payload.put("aadhaarNumber", "999900000001");
+
+        mockMvc.perform(post("/api/auth/aadhaar/send-otp")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(payload)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.maskedEmail").isString());
+    }
+
+    @Test
+    void testAadhaarVerifyOtp_Success() throws Exception {
+        // Send OTP first
+        Map<String, String> otpReq = new HashMap<>();
+        otpReq.put("aadhaarNumber", "999900000001");
+        mockMvc.perform(post("/api/auth/aadhaar/send-otp")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(otpReq)))
+                .andExpect(status().isOk());
+
+        // Verify with dev fallback OTP
+        Map<String, String> verifyReq = new HashMap<>();
+        verifyReq.put("aadhaarNumber", "999900000001");
+        verifyReq.put("otp", "123456");
+
+        mockMvc.perform(post("/api/auth/aadhaar/verify-otp")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(verifyReq)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.token").isString())
+                .andExpect(jsonPath("$.citizen.aadhaarNumber").value("999900000001"));
+    }
+
+    @Test
+    void testCitizenLegacyPasswordRegistration_Disabled() throws Exception {
+        Map<String, Object> payload = createValidRegistrationPayload();
+
         mockMvc.perform(post("/api/auth/citizen/register")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(regPayload)))
-                .andExpect(status().isCreated());
-
-        // Attempt login with wrong password
-        Map<String, String> loginPayload = new HashMap<>();
-        loginPayload.put("email", "kavi@example.com");
-        loginPayload.put("password", "WrongPassword@123");
-
-        mockMvc.perform(post("/api/auth/citizen/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginPayload)))
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.message").value("Invalid email or password"))
-                .andExpect(jsonPath("$.token").doesNotExist());
+                        .content(objectMapper.writeValueAsString(payload)))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    void testCitizenLogin_NonExistentEmail_Returns401Unauthorized() throws Exception {
+    void testCitizenLegacyPasswordLogin_Disabled() throws Exception {
         Map<String, String> loginPayload = new HashMap<>();
-        loginPayload.put("email", "nonexistent@example.com");
+        loginPayload.put("email", "kavi@example.com");
         loginPayload.put("password", "Password@123");
 
         mockMvc.perform(post("/api/auth/citizen/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginPayload)))
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.message").value("Invalid email or password"))
-                .andExpect(jsonPath("$.token").doesNotExist());
+                .andExpect(status().isUnauthorized());
     }
 }
