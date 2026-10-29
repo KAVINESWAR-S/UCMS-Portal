@@ -6,7 +6,6 @@ import com.ucms.repository.CitizenRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@SuppressWarnings("null")
 @Service
 public class CitizenService {
 

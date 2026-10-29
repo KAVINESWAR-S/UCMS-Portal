@@ -31,6 +31,9 @@ public class DevelopmentWork {
     @Column(name = "location", nullable = false)
     private String location;
 
+    @Column(name = "village")
+    private String village;
+
     @Column(name = "estimated_cost", nullable = false, precision = 14, scale = 2)
     private BigDecimal estimatedCost;
 
@@ -68,51 +71,139 @@ public class DevelopmentWork {
     }
 
     // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getWorkId() { return workId; }
-    public void setWorkId(String workId) { this.workId = workId; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public String getWorkId() {
+        return workId;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public void setWorkId(String workId) {
+        this.workId = workId;
+    }
 
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
+    public String getTitle() {
+        return title;
+    }
 
-    public String getLocation() { return location; }
-    public void setLocation(String location) { this.location = location; }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    public BigDecimal getEstimatedCost() { return estimatedCost; }
-    public void setEstimatedCost(BigDecimal estimatedCost) { this.estimatedCost = estimatedCost; }
+    public String getDescription() {
+        return description;
+    }
 
-    public BigDecimal getAllocatedAmount() { return allocatedAmount; }
-    public void setAllocatedAmount(BigDecimal allocatedAmount) { this.allocatedAmount = allocatedAmount; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public BigDecimal getSpentAmount() { return spentAmount; }
-    public void setSpentAmount(BigDecimal spentAmount) { this.spentAmount = spentAmount; }
+    public String getCategory() {
+        return category;
+    }
 
-    public LocalDate getStartDate() { return startDate; }
-    public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
-    public LocalDate getExpectedCompletionDate() { return expectedCompletionDate; }
-    public void setExpectedCompletionDate(LocalDate expectedCompletionDate) { this.expectedCompletionDate = expectedCompletionDate; }
+    public String getLocation() {
+        return location;
+    }
 
-    public LocalDate getActualCompletionDate() { return actualCompletionDate; }
-    public void setActualCompletionDate(LocalDate actualCompletionDate) { this.actualCompletionDate = actualCompletionDate; }
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
-    public Integer getProgressPercentage() { return progressPercentage; }
-    public void setProgressPercentage(Integer progressPercentage) { this.progressPercentage = progressPercentage; }
+    public String getVillage() {
+        return village;
+    }
 
-    public WorkStatus getStatus() { return status; }
-    public void setStatus(WorkStatus status) { this.status = status; }
+    public void setVillage(String village) {
+        this.village = village;
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public BigDecimal getEstimatedCost() {
+        return estimatedCost;
+    }
 
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    public void setEstimatedCost(BigDecimal estimatedCost) {
+        this.estimatedCost = estimatedCost;
+    }
+
+    public BigDecimal getAllocatedAmount() {
+        return allocatedAmount;
+    }
+
+    public void setAllocatedAmount(BigDecimal allocatedAmount) {
+        this.allocatedAmount = allocatedAmount;
+    }
+
+    public BigDecimal getSpentAmount() {
+        return spentAmount;
+    }
+
+    public void setSpentAmount(BigDecimal spentAmount) {
+        this.spentAmount = spentAmount;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getExpectedCompletionDate() {
+        return expectedCompletionDate;
+    }
+
+    public void setExpectedCompletionDate(LocalDate expectedCompletionDate) {
+        this.expectedCompletionDate = expectedCompletionDate;
+    }
+
+    public LocalDate getActualCompletionDate() {
+        return actualCompletionDate;
+    }
+
+    public void setActualCompletionDate(LocalDate actualCompletionDate) {
+        this.actualCompletionDate = actualCompletionDate;
+    }
+
+    public Integer getProgressPercentage() {
+        return progressPercentage;
+    }
+
+    public void setProgressPercentage(Integer progressPercentage) {
+        this.progressPercentage = progressPercentage;
+    }
+
+    public WorkStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(WorkStatus status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }

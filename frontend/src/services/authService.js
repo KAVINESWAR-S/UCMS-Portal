@@ -30,6 +30,12 @@ export const authService = {
     return response.data;
   },
 
+  // Dedicated Admin login using Email + Password
+  loginAdmin: async (data) => {
+    const response = await api.post('/api/admin/auth/login', data);
+    return response.data;
+  },
+
   getCurrentUser: async () => {
     const response = await api.get('/api/auth/me');
     return response.data;

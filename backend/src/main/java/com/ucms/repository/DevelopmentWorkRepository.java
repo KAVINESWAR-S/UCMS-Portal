@@ -12,5 +12,7 @@ import java.util.Optional;
 public interface DevelopmentWorkRepository extends JpaRepository<DevelopmentWork, Long> {
     Optional<DevelopmentWork> findByWorkId(String workId);
     List<DevelopmentWork> findAllByOrderByCreatedAtDesc();
+    List<DevelopmentWork> findByVillageIgnoreCaseOrderByCreatedAtDesc(String village);
+    List<DevelopmentWork> findByVillageIgnoreCase(String village);
     long countByStatus(WorkStatus status);
 }

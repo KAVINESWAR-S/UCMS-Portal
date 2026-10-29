@@ -8,13 +8,11 @@ import com.ucms.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("null")
 @Service
 public class ApplicationService {
 

@@ -20,7 +20,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.util.Arrays;
 
-@SuppressWarnings("null")
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -50,9 +49,10 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/api/auth/**", "/api/officer/auth/**", "/api/health", "/api/schemes/**", "/h2-console/**", "/api/public/**").permitAll()
-                        .requestMatchers("/api/citizen/**").hasAnyRole("CITIZEN", "OFFICER")
-                        .requestMatchers("/api/officer/**").hasRole("OFFICER")
+                        .requestMatchers("/api/auth/**", "/api/officer/auth/**", "/api/admin/auth/**", "/api/health", "/api/schemes/**", "/h2-console/**", "/api/public/**").permitAll()
+                        .requestMatchers("/api/citizen/**").hasAnyRole("CITIZEN", "OFFICER", "ADMIN")
+                        .requestMatchers("/api/officer/**").hasAnyRole("OFFICER", "ADMIN")
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

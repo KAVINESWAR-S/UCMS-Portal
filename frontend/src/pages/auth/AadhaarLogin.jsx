@@ -308,10 +308,13 @@ export const AadhaarLogin = () => {
         </form>
       )}
 
-      {/* Switch to Officer Login */}
-      <div style={{ marginTop: '1.75rem', paddingTop: '1.25rem', borderTop: '1px solid var(--slate-200)', textAlign: 'center', fontSize: '0.85rem' }}>
-        <Link to="/officer/login" style={{ color: 'var(--slate-600)', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-          <Building size={14} /> Are you a Panchayat Officer? <strong>Officer Portal Login →</strong>
+      {/* Switch to Officer & Admin Login */}
+      <div style={{ marginTop: '1.75rem', paddingTop: '1.25rem', borderTop: '1px solid var(--slate-200)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.825rem' }}>
+        <Link to="/officer/login" style={{ color: 'var(--slate-600)', display: 'inline-flex', alignItems: 'center', gap: '0.35rem', textDecoration: 'none' }}>
+          <Building size={14} /> <span>Panchayat Officer →</span>
+        </Link>
+        <Link to="/admin/login" style={{ color: '#4338ca', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '0.35rem', textDecoration: 'none' }}>
+          <span>Central Administrator Portal →</span>
         </Link>
       </div>
     </div>

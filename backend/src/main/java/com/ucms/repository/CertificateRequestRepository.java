@@ -14,5 +14,7 @@ public interface CertificateRequestRepository extends JpaRepository<CertificateR
     Optional<CertificateRequest> findByCertificateReference(String certificateReference);
     List<CertificateRequest> findByCitizenIdOrderByCreatedAtDesc(Long citizenId);
     List<CertificateRequest> findAllByOrderByCreatedAtDesc();
+    List<CertificateRequest> findByCitizen_VillageIgnoreCaseOrderByCreatedAtDesc(String village);
+    long countByCitizen_VillageIgnoreCase(String village);
     long countByStatus(CertificateStatus status);
 }

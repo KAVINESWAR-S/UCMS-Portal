@@ -20,4 +20,16 @@ public interface CitizenRepository extends JpaRepository<Citizen, Long> {
     java.util.List<Citizen> findByVillage(String village);
 
     java.util.List<Citizen> findByVillageIgnoreCase(String village);
+
+    java.util.List<Citizen> findByRole(com.ucms.model.Role role);
+
+    java.util.List<Citizen> findByRoleOrderByFullNameAsc(com.ucms.model.Role role);
+
+    long countByRole(com.ucms.model.Role role);
+
+    long countByVillageIgnoreCase(String village);
+
+    @org.springframework.data.jpa.repository.Query("SELECT DISTINCT c.village FROM Citizen c WHERE c.village IS NOT NULL")
+    java.util.List<String> findDistinctVillages();
 }
+

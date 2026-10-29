@@ -37,13 +37,11 @@ public class AadhaarAuthService {
     private static class OtpEntry {
         final String otpHash;
         final Instant expiresAt;
-        final String aadhaarOrEmail;
         int attemptCount;
 
-        OtpEntry(String plainOtp, Instant expiresAt, String aadhaarOrEmail) {
+        OtpEntry(String plainOtp, Instant expiresAt) {
             this.otpHash = hashOtp(plainOtp);
             this.expiresAt = expiresAt;
-            this.aadhaarOrEmail = aadhaarOrEmail;
             this.attemptCount = 0;
         }
 
@@ -232,7 +230,7 @@ public class AadhaarAuthService {
         // Expiry: 5 minutes (300 seconds)
         Instant expiry = Instant.now().plusSeconds(300);
 
-        OtpEntry entry = new OtpEntry(generatedOtp, expiry, targetEmail);
+        OtpEntry entry = new OtpEntry(generatedOtp, expiry);
 
         // Store OTP keyed by Aadhaar and email
         if (targetAadhaar != null) {

@@ -95,11 +95,43 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
+    public AuthResponse adminLogin(CitizenLoginRequest request) {
+        String normalizedEmail = request.getEmail().trim().toLowerCase();
+
+        Citizen admin = citizenRepository.findByEmail(normalizedEmail)
+                .orElseThrow(() -> new InvalidCredentialsException("Invalid admin credentials"));
+
+        if (admin.getRole() != Role.ADMIN) {
+            throw new InvalidCredentialsException("Access denied: Account is not authorized as an Administrator");
+        }
+
+        if (!passwordEncoder.matches(request.getPassword(), admin.getPassword())) {
+            throw new InvalidCredentialsException("Invalid admin credentials");
+        }
+
+        String token = jwtService.generateToken(admin);
+        CitizenDto adminDto = CitizenDto.forLogin(admin);
+
+        AuthResponse resp = new AuthResponse(
+                true,
+                "Admin login successful",
+                token,
+                adminDto
+        );
+        resp.setUser(adminDto);
+        return resp;
+    }
+
+    @Transactional(readOnly = true)
     public AuthResponse loginCitizen(CitizenLoginRequest request) {
         String normalizedEmail = request.getEmail().trim().toLowerCase();
 
         Citizen citizen = citizenRepository.findByEmail(normalizedEmail)
                 .orElseThrow(() -> new InvalidCredentialsException("Invalid email or password"));
+
+        if (citizen.getRole() == Role.ADMIN) {
+            return adminLogin(request);
+        }
 
         if (citizen.getRole() == Role.OFFICER) {
             return officerLogin(request);

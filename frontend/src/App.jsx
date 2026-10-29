@@ -2,11 +2,13 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { MainLayout, AuthLayout } from './layouts/MainLayout';
+import { AdminLayout } from './layouts/AdminLayout';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 
 // Auth Pages
 import { AadhaarLogin } from './pages/auth/AadhaarLogin';
 import { OfficerLogin } from './pages/auth/OfficerLogin';
+import { AdminLogin } from './pages/auth/AdminLogin';
 import { VerifyCertificate } from './pages/public/VerifyCertificate';
 
 // Citizen Pages
@@ -34,12 +36,29 @@ import { VillageDashboard } from './pages/officer/VillageDashboard';
 import { DevelopmentWorks } from './pages/officer/DevelopmentWorks';
 import { BudgetTransparency } from './pages/officer/BudgetTransparency';
 
+// Admin Pages
+import { AdminDashboard } from './pages/admin/AdminDashboard';
+import { VillageManagement } from './pages/admin/VillageManagement';
+import { OfficerManagement } from './pages/admin/OfficerManagement';
+import { CitizenManagement } from './pages/admin/CitizenManagement';
+import { ApplicationManagement } from './pages/admin/ApplicationManagement';
+import { CertificateManagement } from './pages/admin/CertificateManagement';
+import { BudgetManagement } from './pages/admin/BudgetManagement';
+import { DevelopmentWorks as AdminDevelopmentWorks } from './pages/admin/DevelopmentWorks';
+import { SchemeManagement } from './pages/admin/SchemeManagement';
+import { GrievanceManagement } from './pages/admin/GrievanceManagement';
+import { AiFraudMonitoring } from './pages/admin/AiFraudMonitoring';
+import { AuditLogs } from './pages/admin/AuditLogs';
+import { Reports as AdminReports } from './pages/admin/Reports';
+
 const RootRedirect = () => {
   const { isAuthenticated, role, loading } = useAuth();
 
   if (loading) return null;
   if (!isAuthenticated) return <Navigate to="/login" replace />;
-  return <Navigate to={role === 'OFFICER' ? '/officer/dashboard' : '/citizen/dashboard'} replace />;
+  if (role === 'ADMIN') return <Navigate to="/admin/dashboard" replace />;
+  if (role === 'OFFICER') return <Navigate to="/officer/dashboard" replace />;
+  return <Navigate to="/citizen/dashboard" replace />;
 };
 
 export default function App() {
@@ -57,6 +76,7 @@ export default function App() {
             <Route path="/login" element={<AadhaarLogin />} />
             <Route path="/register" element={<Navigate to="/login" replace />} />
             <Route path="/officer/login" element={<OfficerLogin />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
           </Route>
 
           {/* Citizen Protected Routes */}
@@ -89,6 +109,25 @@ export default function App() {
               <Route path="/officer/village" element={<VillageDashboard />} />
               <Route path="/officer/development-works" element={<DevelopmentWorks />} />
               <Route path="/officer/budget" element={<BudgetTransparency />} />
+            </Route>
+          </Route>
+
+          {/* Admin Protected Routes */}
+          <Route element={<ProtectedRoute allowedRole="ADMIN" />}>
+            <Route element={<AdminLayout />}>
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="/admin/villages" element={<VillageManagement />} />
+              <Route path="/admin/officers" element={<OfficerManagement />} />
+              <Route path="/admin/citizens" element={<CitizenManagement />} />
+              <Route path="/admin/applications" element={<ApplicationManagement />} />
+              <Route path="/admin/certificates" element={<CertificateManagement />} />
+              <Route path="/admin/budgets" element={<BudgetManagement />} />
+              <Route path="/admin/development-works" element={<AdminDevelopmentWorks />} />
+              <Route path="/admin/schemes" element={<SchemeManagement />} />
+              <Route path="/admin/grievances" element={<GrievanceManagement />} />
+              <Route path="/admin/ai-fraud" element={<AiFraudMonitoring />} />
+              <Route path="/admin/audit-logs" element={<AuditLogs />} />
+              <Route path="/admin/reports" element={<AdminReports />} />
             </Route>
           </Route>
 

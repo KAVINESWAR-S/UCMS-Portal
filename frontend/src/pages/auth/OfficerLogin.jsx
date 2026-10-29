@@ -167,9 +167,12 @@ export const OfficerLogin = () => {
         </button>
       </form>
 
-      <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.85rem' }}>
+      <div style={{ marginTop: '1.5rem', paddingTop: '1.25rem', borderTop: '1px solid var(--slate-200)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.825rem' }}>
         <Link to="/login" style={{ color: 'var(--slate-600)', textDecoration: 'none' }}>
-          ← Switch back to Citizen Aadhaar Login
+          ← Citizen Aadhaar Login
+        </Link>
+        <Link to="/admin/login" style={{ color: '#4338ca', fontWeight: 700, textDecoration: 'none' }}>
+          Central Admin Portal →
         </Link>
       </div>
     </div>

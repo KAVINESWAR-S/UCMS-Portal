@@ -14,5 +14,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     Optional<Application> findBySanctionReference(String sanctionReference);
     List<Application> findByCitizenIdOrderByCreatedAtDesc(Long citizenId);
     List<Application> findAllByOrderByCreatedAtDesc();
+    List<Application> findByCitizen_VillageIgnoreCaseOrderByCreatedAtDesc(String village);
+    long countByCitizen_VillageIgnoreCase(String village);
     long countByStatus(ApplicationStatus status);
 }

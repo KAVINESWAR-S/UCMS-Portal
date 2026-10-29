@@ -29,8 +29,9 @@ public class DataInitializer implements CommandLineRunner {
     private final ApplicationRepository applicationRepository;
     private final CertificateRequestRepository certificateRequestRepository;
     private final SuggestionRepository suggestionRepository;
-    private final AiAnalysisRepository aiAnalysisRepository;
     private final DocumentRepository documentRepository;
+    private final VillageBudgetRepository villageBudgetRepository;
+    private final OfficerAssignmentRepository officerAssignmentRepository;
     private final PasswordEncoder passwordEncoder;
 
     public DataInitializer(CitizenRepository citizenRepository,
@@ -43,8 +44,9 @@ public class DataInitializer implements CommandLineRunner {
                            ApplicationRepository applicationRepository,
                            CertificateRequestRepository certificateRequestRepository,
                            SuggestionRepository suggestionRepository,
-                           AiAnalysisRepository aiAnalysisRepository,
                            DocumentRepository documentRepository,
+                           VillageBudgetRepository villageBudgetRepository,
+                           OfficerAssignmentRepository officerAssignmentRepository,
                            PasswordEncoder passwordEncoder) {
         this.citizenRepository = citizenRepository;
         this.mockAadhaarRepository = mockAadhaarRepository;
@@ -56,8 +58,9 @@ public class DataInitializer implements CommandLineRunner {
         this.applicationRepository = applicationRepository;
         this.certificateRequestRepository = certificateRequestRepository;
         this.suggestionRepository = suggestionRepository;
-        this.aiAnalysisRepository = aiAnalysisRepository;
         this.documentRepository = documentRepository;
+        this.villageBudgetRepository = villageBudgetRepository;
+        this.officerAssignmentRepository = officerAssignmentRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -76,11 +79,18 @@ public class DataInitializer implements CommandLineRunner {
         log.info(">> Seeding Panchayat Officers for Sathyamangalam, Bhavanisagar, Gobichettipalayam...");
         seedPanchayatOfficers();
 
+        log.info(">> Seeding Central Administrator account...");
+        seedAdminUser();
+
+        log.info(">> Seeding Officer Assignments...");
+        seedOfficerAssignments();
+
         log.info(">> Seeding Welfare Schemes...");
         seedWelfareSchemes();
 
         log.info(">> Seeding Village Budget and Works...");
         seedVillageBudget();
+        seedVillageBudgets();
         seedDevelopmentWorks();
 
         log.info(">> Seeding multi-panchayat Grievances and Service Requests...");
@@ -268,6 +278,54 @@ public class DataInitializer implements CommandLineRunner {
         }
     }
 
+    private void seedAdminUser() {
+        if (!citizenRepository.existsByEmail("admin@ucms.gov.in")) {
+            Citizen admin = new Citizen();
+            admin.setFullName("Central Administrator");
+            admin.setEmail("admin@ucms.gov.in");
+            admin.setPhoneNumber("9999900000");
+            admin.setPassword(passwordEncoder.encode("Admin@123"));
+            admin.setDateOfBirth(LocalDate.of(1980, 1, 1));
+            admin.setGender(Gender.MALE);
+            admin.setAddress("State Administrative Complex, Erode District");
+            admin.setVillage("All");
+            admin.setOccupation("System Administrator");
+            admin.setAnnualIncome(new BigDecimal("1200000.00"));
+            admin.setLandArea(BigDecimal.ZERO);
+            admin.setFarmerStatus(false);
+            admin.setRole(Role.ADMIN);
+            citizenRepository.save(admin);
+            log.info(">> Seeded Admin account: admin@ucms.gov.in (Admin@123)");
+        }
+    }
+
+    private void seedOfficerAssignments() {
+        if (officerAssignmentRepository.count() == 0) {
+            officerAssignmentRepository.save(new OfficerAssignment(
+                    "officer.sathyamangalam@example.com",
+                    "Sathyamangalam Panchayat Officer",
+                    "Sathyamangalam",
+                    "admin@ucms.gov.in",
+                    "Initial system assignment"
+            ));
+            officerAssignmentRepository.save(new OfficerAssignment(
+                    "officer.bhavanisagar@example.com",
+                    "Bhavanisagar Panchayat Officer",
+                    "Bhavanisagar",
+                    "admin@ucms.gov.in",
+                    "Initial system assignment"
+            ));
+            officerAssignmentRepository.save(new OfficerAssignment(
+                    "officer.gobichettipalayam@example.com",
+                    "Gobichettipalayam Panchayat Officer",
+                    "Gobichettipalayam",
+                    "admin@ucms.gov.in",
+                    "Initial system assignment"
+            ));
+            log.info(">> Seeded default OfficerAssignments for 3 panchayats");
+        }
+    }
+
     private void seedWelfareSchemes() {
         if (schemeRepository.count() > 0) {
             return;
@@ -332,6 +390,35 @@ public class DataInitializer implements CommandLineRunner {
         budgetRepository.save(b);
     }
 
+    private void seedVillageBudgets() {
+        if (villageBudgetRepository.count() > 0) {
+            return;
+        }
+
+        villageBudgetRepository.save(new VillageBudget(
+                "Sathyamangalam",
+                "2025-2026",
+                new BigDecimal("4000000.00"),
+                new BigDecimal("1850000.00"),
+                "admin@ucms.gov.in"
+        ));
+        villageBudgetRepository.save(new VillageBudget(
+                "Bhavanisagar",
+                "2025-2026",
+                new BigDecimal("3500000.00"),
+                new BigDecimal("1200000.00"),
+                "admin@ucms.gov.in"
+        ));
+        villageBudgetRepository.save(new VillageBudget(
+                "Gobichettipalayam",
+                "2025-2026",
+                new BigDecimal("5000000.00"),
+                new BigDecimal("2100000.00"),
+                "admin@ucms.gov.in"
+        ));
+        log.info(">> Seeded VillageBudgets for Sathyamangalam, Bhavanisagar, and Gobichettipalayam");
+    }
+
     private void seedDevelopmentWorks() {
         if (developmentWorkRepository.count() > 0) {
             return;
@@ -343,6 +430,7 @@ public class DataInitializer implements CommandLineRunner {
         w1.setDescription("Installation of 45 high-efficiency solar streetlights across main agricultural transit roads.");
         w1.setCategory("Electrification");
         w1.setLocation("Sathyamangalam North Ward");
+        w1.setVillage("Sathyamangalam");
         w1.setEstimatedCost(new BigDecimal("450000.00"));
         w1.setAllocatedAmount(new BigDecimal("450000.00"));
         w1.setSpentAmount(new BigDecimal("270000.00"));
@@ -358,6 +446,7 @@ public class DataInitializer implements CommandLineRunner {
         w2.setDescription("50,000 liter water storage with solar pump integration for Bhavanisagar residents.");
         w2.setCategory("Water Supply");
         w2.setLocation("Bhavanisagar South Ward");
+        w2.setVillage("Bhavanisagar");
         w2.setEstimatedCost(new BigDecimal("800000.00"));
         w2.setAllocatedAmount(new BigDecimal("800000.00"));
         w2.setSpentAmount(new BigDecimal("800000.00"));
@@ -367,6 +456,22 @@ public class DataInitializer implements CommandLineRunner {
         w2.setProgressPercentage(100);
         w2.setStatus(WorkStatus.COMPLETED);
         developmentWorkRepository.save(w2);
+
+        DevelopmentWork w3 = new DevelopmentWork();
+        w3.setWorkId("WRK-2025-003");
+        w3.setTitle("Gobichettipalayam Primary Health Centre Modernization");
+        w3.setDescription("Upgrading consultation rooms and maternity ward facilities with emergency solar backup.");
+        w3.setCategory("Health Infrastructure");
+        w3.setLocation("Gobichettipalayam East Ward");
+        w3.setVillage("Gobichettipalayam");
+        w3.setEstimatedCost(new BigDecimal("950000.00"));
+        w3.setAllocatedAmount(new BigDecimal("950000.00"));
+        w3.setSpentAmount(new BigDecimal("420000.00"));
+        w3.setStartDate(LocalDate.of(2025, 1, 15));
+        w3.setExpectedCompletionDate(LocalDate.of(2025, 8, 30));
+        w3.setProgressPercentage(45);
+        w3.setStatus(WorkStatus.IN_PROGRESS);
+        developmentWorkRepository.save(w3);
     }
 
     private void seedSampleCivicData() {

@@ -18,19 +18,13 @@ export const ProtectedRoute = ({ allowedRole }) => {
     return <Navigate to="/login" replace />;
   }
 
-  if (allowedRole && role !== allowedRole) {
-    return (
-      <div className="page-body">
-        <div className="card" style={{ maxWidth: '500px', margin: '4rem auto', textAlign: 'center' }}>
-          <ShieldAlert size={48} className="text-danger" style={{ color: 'var(--danger-text)', margin: '0 auto 1rem' }} />
-          <h2 className="card-title">Access Denied (403 Forbidden)</h2>
-          <p style={{ color: 'var(--slate-600)', marginBottom: '1.5rem' }}>
-            You are logged in as <strong>{role}</strong> and do not have administrative permission to access officer-only pages.
-          </p>
-          <Navigate to={role === 'CITIZEN' ? '/citizen/dashboard' : '/officer/dashboard'} replace />
-        </div>
-      </div>
-    );
+  const hasRole = Array.isArray(allowedRole)
+    ? allowedRole.includes(role)
+    : !allowedRole || role === allowedRole;
+
+  if (!hasRole) {
+    const redirectPath = role === 'ADMIN' ? '/admin/dashboard' : role === 'OFFICER' ? '/officer/dashboard' : '/citizen/dashboard';
+    return <Navigate to={redirectPath} replace />;
   }
 
   return <Outlet />;

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@SuppressWarnings("null")
 @RestController
 @RequestMapping("/api/citizen/certificates")
 public class CertificateController {

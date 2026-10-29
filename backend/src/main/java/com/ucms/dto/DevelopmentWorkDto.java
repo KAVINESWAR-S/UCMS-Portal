@@ -14,6 +14,7 @@ public class DevelopmentWorkDto {
     private String description;
     private String category;
     private String location;
+    private String village;
     private BigDecimal estimatedCost;
     private BigDecimal allocatedAmount;
     private BigDecimal spentAmount;
@@ -35,6 +36,7 @@ public class DevelopmentWorkDto {
         dto.setDescription(dw.getDescription());
         dto.setCategory(dw.getCategory());
         dto.setLocation(dw.getLocation());
+        dto.setVillage(dw.getVillage());
         dto.setEstimatedCost(dw.getEstimatedCost());
         dto.setAllocatedAmount(dw.getAllocatedAmount());
         dto.setSpentAmount(dw.getSpentAmount());
@@ -65,6 +67,9 @@ public class DevelopmentWorkDto {
 
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }
+
+    public String getVillage() { return village; }
+    public void setVillage(String village) { this.village = village; }
 
     public BigDecimal getEstimatedCost() { return estimatedCost; }
     public void setEstimatedCost(BigDecimal estimatedCost) { this.estimatedCost = estimatedCost; }
