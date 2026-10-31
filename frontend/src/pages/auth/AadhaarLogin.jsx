@@ -82,7 +82,7 @@ export const AadhaarLogin = () => {
     } catch (err) {
       if (!err.response) {
         setError(
-          'Cannot connect to UCMS Backend (http://localhost:8080). Please ensure the Spring Boot backend server is running.'
+          'Cannot connect to UCMS Backend. Please ensure the Spring Boot backend server is running.'
         );
       } else {
         setError(err.response?.data?.message || 'Aadhaar verification failed. Please verify the number.');
