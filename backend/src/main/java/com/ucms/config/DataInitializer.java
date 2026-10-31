@@ -171,10 +171,64 @@ public class DataInitializer implements CommandLineRunner {
         );
         mockAadhaarRepository.save(a3);
 
+        // 4. Sathyamangalam Village Aadhaar (Citizen 4 - Women Empowerment Candidate)
+        MockAadhaar a4 = new MockAadhaar(
+                "999900000004",
+                "Priya R",
+                "priya.r@example.com",
+                "9842104444",
+                LocalDate.of(1992, 4, 18),
+                Gender.FEMALE,
+                "Kamaraj Nagar, Sathyamangalam",
+                "Sathyamangalam",
+                "Tailoring & Handcrafts",
+                new BigDecimal("68000.00"),
+                new BigDecimal("0.00"),
+                false
+        );
+        mockAadhaarRepository.save(a4);
+
+        // 5. Bhavanisagar Village Aadhaar (Citizen 5 - Small Farmer)
+        MockAadhaar a5 = new MockAadhaar(
+                "999900000005",
+                "Murugan M",
+                "murugan.m@example.com",
+                "9842105555",
+                LocalDate.of(1985, 11, 25),
+                Gender.MALE,
+                "Dam Road, Bhavanisagar",
+                "Bhavanisagar",
+                "Sugarcane & Paddy Cultivation",
+                new BigDecimal("82000.00"),
+                new BigDecimal("1.25"),
+                true
+        );
+        mockAadhaarRepository.save(a5);
+
+        // 6. Gobichettipalayam Village Aadhaar (Citizen 6 - Artisan)
+        MockAadhaar a6 = new MockAadhaar(
+                "999900000006",
+                "Anitha S",
+                "anitha.s@example.com",
+                "9842106666",
+                LocalDate.of(1997, 9, 30),
+                Gender.FEMALE,
+                "Nethaji Street, Gobichettipalayam",
+                "Gobichettipalayam",
+                "Silk Weaving & Artisanship",
+                new BigDecimal("74000.00"),
+                new BigDecimal("0.50"),
+                false
+        );
+        mockAadhaarRepository.save(a6);
+
         // Also pre-create Citizen entities from mock records so immediate login/queries work seamlessly
         createCitizenFromMock(a1);
         createCitizenFromMock(a2);
         createCitizenFromMock(a3);
+        createCitizenFromMock(a4);
+        createCitizenFromMock(a5);
+        createCitizenFromMock(a6);
     }
 
     private void createCitizenFromMock(MockAadhaar mock) {

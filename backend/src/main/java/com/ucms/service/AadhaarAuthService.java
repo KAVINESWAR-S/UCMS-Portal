@@ -96,18 +96,12 @@ public class AadhaarAuthService {
     }
 
     /**
-     * Check Aadhaar existence in Mock Database.
+     * Check Aadhaar existence strictly from the database.
      * Endpoint: POST /api/auth/aadhaar/check
      */
     public MockAadhaar getOrCreateMockAadhaar(String cleanAadhaar, String rawInput) {
         if (cleanAadhaar != null && cleanAadhaar.length() == 12) {
-            Optional<MockAadhaar> opt = mockAadhaarRepository.findByAadhaarNumber(cleanAadhaar);
-            if (opt.isPresent()) {
-                return opt.get();
-            }
-            // Dynamic UIDAI Mock generation for any 12-digit Aadhaar so test/friend inputs never fail
-            MockAadhaar dynamic = generateDynamicMockAadhaar(cleanAadhaar);
-            return mockAadhaarRepository.save(dynamic);
+            return mockAadhaarRepository.findByAadhaarNumber(cleanAadhaar).orElse(null);
         }
         if (rawInput != null && rawInput.contains("@")) {
             String lower = rawInput.trim().toLowerCase();
@@ -117,27 +111,6 @@ public class AadhaarAuthService {
             return mockAadhaarRepository.findByEmailIgnoreCase(lower).orElse(null);
         }
         return null;
-    }
-
-    private MockAadhaar generateDynamicMockAadhaar(String cleanAadhaar) {
-        String lastFour = cleanAadhaar.length() >= 4 ? cleanAadhaar.substring(cleanAadhaar.length() - 4) : "0000";
-        String name = "Citizen " + lastFour;
-        String email = "citizen." + cleanAadhaar + "@demo.ucms.gov.in";
-        String phone = "98" + cleanAadhaar.substring(Math.max(0, cleanAadhaar.length() - 8));
-        return new MockAadhaar(
-                cleanAadhaar,
-                name,
-                email,
-                phone,
-                java.time.LocalDate.of(1995, 1, 1),
-                com.ucms.model.Gender.MALE,
-                "Erode District, Tamil Nadu",
-                "Sathyamangalam",
-                "Agriculture & Allied Services",
-                new java.math.BigDecimal("96000.00"),
-                new java.math.BigDecimal("1.50"),
-                true
-        );
     }
 
     /**
@@ -288,11 +261,7 @@ public class AadhaarAuthService {
         }
 
         if (entry == null) {
-            if ("123456".equals(inputOtp) || inputOtp.length() == 6) {
-                // allow dev fallback for testing
-            } else {
-                throw new IllegalArgumentException("OTP expired or not requested. Please request a new OTP.");
-            }
+            throw new IllegalArgumentException("OTP expired or not requested. Please request a new OTP.");
         } else {
             if (entry.isExpired()) {
                 otpCache.remove(cleanAadhaar);

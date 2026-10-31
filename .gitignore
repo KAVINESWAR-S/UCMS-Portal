@@ -8,3 +8,8 @@ node_modules/
 .ipynb_checkpoints/
 .DS_Store
 Thumbs.db
+backend/target/
+target/
+*.log
+backend-error.txt
+backend/data/

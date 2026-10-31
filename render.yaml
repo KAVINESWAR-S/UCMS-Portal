@@ -1,0 +1,40 @@
+services:
+  # 1. UCMS Python FastAPI AI Service
+  - type: web
+    name: ucms-ai-service
+    env: docker
+    dockerfilePath: Dockerfile.ai
+    plan: free
+    region: oregon
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: ALLOWED_ORIGINS
+        value: "*"
+
+  # 2. UCMS Spring Boot Java Backend
+  - type: web
+    name: ucms-backend
+    env: docker
+    rootDir: backend
+    dockerfilePath: Dockerfile
+    plan: free
+    region: oregon
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: SPRING_PROFILES_ACTIVE
+        value: postgres
+      - key: DB_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: AI_SERVICE_URL
+        fromService:
+          type: web
+          name: ucms-ai-service
+          property: host
