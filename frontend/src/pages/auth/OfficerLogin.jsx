@@ -30,7 +30,7 @@ export const OfficerLogin = () => {
     } catch (err) {
       if (!err.response) {
         setError(
-          'Cannot connect to UCMS Backend (http://localhost:8080). Please ensure the Spring Boot backend server is running.'
+          'Cannot connect to UCMS Backend server. Please verify your connection or check if the backend service is awake.'
         );
       } else {
         setError(err.response?.data?.message || 'Invalid officer credentials for this Panchayat.');

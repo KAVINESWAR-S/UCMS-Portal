@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://ucms-backend-ygej.onrender.com' : 'http://localhost:8080');
+// Default to live Render backend for both local dev and production unless overridden by VITE_API_URL
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://ucms-backend-ygej.onrender.com';
 
 const api = axios.create({
   baseURL: API_BASE_URL,

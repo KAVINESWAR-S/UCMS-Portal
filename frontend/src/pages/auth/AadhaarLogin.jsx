@@ -108,7 +108,7 @@ export const AadhaarLogin = () => {
     } catch (err) {
       if (!err.response) {
         setError(
-          'Cannot connect to UCMS Backend (http://localhost:8080). Please check if backend is running.'
+          'Cannot connect to UCMS Backend server. Please verify your connection or check if the backend service is awake.'
         );
       } else {
         setError(err.response?.data?.message || 'Invalid or expired OTP. Please try again.');

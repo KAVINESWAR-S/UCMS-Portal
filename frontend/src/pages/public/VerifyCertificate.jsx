@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../services/api';
 import {
   ShieldCheck,
   ShieldAlert,
@@ -31,7 +31,7 @@ export const VerifyCertificate = () => {
     setLoading(true);
     setSearched(true);
     try {
-      const response = await axios.get(`http://localhost:8080/api/public/verify/${encodeURIComponent(refCode.trim())}`);
+      const response = await api.get(`/api/public/verify/${encodeURIComponent(refCode.trim())}`);
       setResult(response.data);
     } catch (err) {
       setResult({

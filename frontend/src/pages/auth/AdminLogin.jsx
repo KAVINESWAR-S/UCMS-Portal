@@ -29,7 +29,7 @@ export const AdminLogin = () => {
       navigate('/admin/dashboard');
     } catch (err) {
       if (!err.response) {
-        setError('Cannot connect to UCMS Backend (http://localhost:8080). Please ensure the backend server is running.');
+        setError('Cannot connect to UCMS Backend server. Please verify your connection or check if the backend service is awake.');
       } else {
         setError(err.response?.data?.message || 'Invalid administrator credentials.');
       }
